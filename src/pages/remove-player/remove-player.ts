@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
 /**
  * Generated class for the RemovePlayerPage page.
@@ -15,11 +15,26 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class RemovePlayerPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  playerNum:number;
+  totalNumofPlayers:number;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
   }
 
   ionViewDidLoad() {
+    this.totalNumofPlayers=this.navParams.get('totalPlayerNums');
     console.log('ionViewDidLoad RemovePlayerPage');
+  }
+
+  goBack(){
+    this.viewCtrl.dismiss();
+  }
+
+  removePlayer(){
+    if(this.playerNum!==undefined&&this.playerNum>=1&&this.playerNum<=this.totalNumofPlayers){
+      this.viewCtrl.dismiss(this.playerNum);
+    }
+    
   }
 
 }

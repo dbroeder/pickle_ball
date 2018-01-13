@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
 import {RemovePlayerPage} from '../remove-player/remove-player'
 
 @Component({
@@ -22,7 +22,7 @@ export class HomePage {
   sbuttonColor2='primary';
   rounds=1;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, public modalCtrl: ModalController) {
    
   }
 
@@ -93,7 +93,6 @@ export class HomePage {
         this.matches.push(new DoublesGame(this.picklePlayers[index],this.picklePlayers[index+1],this.picklePlayers[index+2],this.picklePlayers[index+3],index/4+1))
       }
       this.byePlayer=this.picklePlayers[this.picklePlayers.length-1];
-      this.picklePlayers[this.picklePlayers.length-1].bye=true;
     }
     else if(this.picklePlayers.length%4===3){
       this.allHaveHadByes();
@@ -101,17 +100,14 @@ export class HomePage {
         this.randomList(this.picklePlayers.length);
       }
       this.byePlayer=this.picklePlayers[this.picklePlayers.length-1];
-      this.picklePlayers[this.picklePlayers.length-1].bye=true;
       this.allHavePlayedSingles();
       while(this.picklePlayers[this.picklePlayers.length-2].singles){
         this.randomList(this.picklePlayers.length-1);
       }
-      this.picklePlayers[this.picklePlayers.length-2].singles=true;
       var player1=this.picklePlayers[this.picklePlayers.length-2];
       while(this.picklePlayers[this.picklePlayers.length-3].singles){
         this.randomList(this.picklePlayers.length-2);
       }
-      this.picklePlayers[this.picklePlayers.length-3].singles=true;
       var player2=this.picklePlayers[this.picklePlayers.length-3];
      
       var court=Math.floor(this.picklePlayers.length/4)+1;
@@ -134,12 +130,10 @@ export class HomePage {
       }
       this.sbuttonColor1='primary';
       this.sbuttonColor2='primary';
-      this.picklePlayers[this.picklePlayers.length-1].singles=true;
       var player1=this.picklePlayers[this.picklePlayers.length-1];
       while(this.picklePlayers[this.picklePlayers.length-2].singles){
         this.randomList(this.picklePlayers.length-1);
       }
-      this.picklePlayers[this.picklePlayers.length-2].singles=true;
       var player2=this.picklePlayers[this.picklePlayers.length-2];
      
       var court=Math.floor(this.picklePlayers.length/4)+1;
@@ -307,11 +301,21 @@ export class HomePage {
         count++;
       }
       this.picklePlayers[count]=this.singleGame.player1;
+      this.picklePlayers[count].singles=true;
       count=0;
       while(this.singleGame.player2.id!==this.picklePlayers[count].id){
         count++;
       }
       this.picklePlayers[count]=this.singleGame.player2;
+      this.picklePlayers[count].singles=true;
+    }
+    if(this.byeRound==true){
+      for(var index=0;index<this.picklePlayers.length;index++){
+        if(this.picklePlayers[index].id==this.byePlayer.id){
+          this.picklePlayers[index]=this.byePlayer;
+          this.picklePlayers[index].bye=true;
+        }
+      }
     }
 
   }
@@ -319,13 +323,45 @@ export class HomePage {
   nextRound(){
     this.rounds++;
     this.postGame();
-    this.randomList(this.picklePlayers.length);
-    this.matchups();
+    this.refresh();
   }
 
   addPlayer(){
-    this.picklePlayers.push(new Playa(this.picklePlayers.length+1));
-    this.nextRound();
+    var newPlayerNum=0;
+    for(var dex=0;dex<this.picklePlayers.length;dex++){
+      if(this.picklePlayers[dex].id>newPlayerNum){
+        newPlayerNum=this.picklePlayers[dex].id;
+      }
+    }
+    this.picklePlayers.push(new Playa(newPlayerNum+1));
+    this.refresh();
+  }
+
+  remove(){
+    let remove = this.modalCtrl.create(RemovePlayerPage,{totalPlayerNums: this.picklePlayers.length});
+    remove.onDidDismiss(data =>{
+      var checkNums=data;
+      console.log(data);
+      if(checkNums!==undefined){
+
+        var num=-1;
+        for(var dex=0;dex<this.picklePlayers.length;dex++){
+          if(this.picklePlayers[dex].id==checkNums){
+            num=dex;
+            console.log(num);
+          }
+          console.log(num);
+        }
+        this.picklePlayers.splice(num,1);
+        this.refresh();
+      }
+    });
+    remove.present();
+    
+  }
+  refresh(){
+    this.randomList(this.picklePlayers.length);
+    this.matchups();
   }
 
 }

@@ -1,18 +1,23 @@
-<!--
-  Generated template for the RemovePlayerPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
   <ion-navbar>
-    <ion-title>removePlayer</ion-title>
+    <ion-title>Remove Player</ion-title>
+    <ion-buttons start>
+      <button ion-button icon-only (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+  <ion-item>
+    <ion-label stacked>Enter a player number to remove.</ion-label>
+    <ion-input type="number" [(ngModel)]="playerNum" placeholder='1 - {{totalNumofPlayers}}'></ion-input>
+  </ion-item>
+
+  <button ion-button (click)="removePlayer()" color="danger">Remove</button>
 
 </ion-content>
