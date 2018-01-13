@@ -26,39 +26,47 @@
   <button *ngIf="b" ion-button color="secondary" (click)="play()" block>Play</button>
   <ion-label *ngIf='in'>Rounds Played: {{rounds}}</ion-label>
   <ion-list *ngIf="in" >
-    <ion-row  *ngFor="let match of matches" >
+    <ion-grid  *ngFor="let match of matches" >
+      <ion-row>
+        <ion-col>
+          <ion-label>Court #{{match.court}}</ion-label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
       <ion-col>
-        <ion-label>Court #{{match.court}}</ion-label>
-      </ion-col>
-      <ion-col>
-          <button ion-button [color]='match.buttonColor1' (click)="winnerWinnerDoubles(match.court,1,match.players[0],match.players[1],match.players[2],match.players[3])">{{match.players[0].id}} and {{match.players[1].id}}</button>
+          <button ion-button [color]='match.buttonColor1' block (click)="winnerWinnerDoubles(match.court,1,match.players[0],match.players[1],match.players[2],match.players[3])">{{match.players[0].id}} and {{match.players[1].id}}</button>
       </ion-col>
       <ion-col>
           <ion-label>Versus</ion-label>
           
       </ion-col>
       <ion-col>
-          <button ion-button [color]='match.buttonColor2' (click)="winnerWinnerDoubles(match.court,2,match.players[2],match.players[3],match.players[0],match.players[1])">{{match.players[2].id}} and {{match.players[3].id}}</button>
+          <button ion-button [color]='match.buttonColor2' block (click)="winnerWinnerDoubles(match.court,2,match.players[2],match.players[3],match.players[0],match.players[1])">{{match.players[2].id}} and {{match.players[3].id}}</button>
       </ion-col>
     </ion-row>
+    </ion-grid>
       
   </ion-list> 
 
-  <ion-row  *ngIf="singles">
+  <ion-grid  *ngIf="singles">
+    <ion-row>
+        <ion-col>
+            <ion-label>Court #{{singleGame.court}}</ion-label>
+          </ion-col>
+    </ion-row>
+      <ion-row>
       <ion-col>
-        <ion-label>Court #{{singleGame.court}}</ion-label>
-      </ion-col>
-      <ion-col>
-          <button ion-button [color]='sbuttonColor1' (click)="winnerWinnerSingles(1,singleGame.player1,singleGame.player2)">{{singleGame.player1.id}}</button>
+          <button ion-button [color]='sbuttonColor1' block (click)="winnerWinnerSingles(1,singleGame.player1,singleGame.player2)">{{singleGame.player1.id}}</button>
       </ion-col>
       <ion-col>
           <ion-label>Versus</ion-label>
           
       </ion-col>
       <ion-col>
-          <button ion-button [color]='sbuttonColor2' (click)="winnerWinnerSingles(2,singleGame.player2,singleGame.player1)">{{singleGame.player2.id}}</button>
+          <button ion-button [color]='sbuttonColor2' block (click)="winnerWinnerSingles(2,singleGame.player2,singleGame.player1)">{{singleGame.player2.id}}</button>
       </ion-col>
-  </ion-row>
+    </ion-row>
+  </ion-grid>
 
   <ion-item *ngIf="byeRound">
     <ion-label>Bye: {{byePlayer.id}}</ion-label>
