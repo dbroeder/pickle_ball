@@ -1,0 +1,8 @@
+{
+  "name": "Pickle_Ball",
+  "app_id": "fe975023",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
