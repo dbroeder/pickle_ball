@@ -1,0 +1,23 @@
+.ios,.md,.wp{
+    page-rounds {
+        background-color: grey;
+        
+        .b_row{
+            border-bottom: 1px solid black;
+        }
+    }
+}
+
+
+
+ion-row {
+    text-align: left;
+    flex-wrap: nowrap;
+    $grid-breakpoints:( xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px )
+    }
+ion-col {
+    text-align: left;
+    
+}
+$grid-padding-width: 0px;
+    $grid-padding-widths: ( xs: $grid-padding-width, sm: $grid-padding-width, md: $grid-padding-width, lg: $grid-padding-width, xl: $grid-padding-width );
