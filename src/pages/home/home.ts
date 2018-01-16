@@ -24,8 +24,8 @@ export class HomePage {
       let num={
         number: this.playerNumber
       }
-      this.navCtrl.push(RoundsPage,num);
-      this.error=false;
+      let pate = this.modalCtrl.create(RoundsPage,num);
+      pate.present();
     }
     
 

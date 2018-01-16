@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { AlertController, IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { ViewController,AlertController, IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import {HomePage} from '../home/home';
 import {RemovePlayerPage} from '../remove-player/remove-player';
+import{ResultsPage} from '../results/results';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @IonicPage()
 @Component({
@@ -27,7 +29,7 @@ export class RoundsPage {
   nextButton=false;
   competitveButton=false;
 
-  constructor(public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
+  constructor(public viewCtrl: ViewController,public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
    
   }
 
@@ -148,14 +150,14 @@ export class RoundsPage {
       if(bnum===1)
       {
         this.matches[cnum-1].buttonColor1='secondary';
-        this.doublesWinners.push(plyr1);
-        this.doublesWinners.push(plyr2);
+        
         
       }else if(bnum===2){
         this.matches[cnum-1].buttonColor2='secondary';
-        this.doublesWinners.push(plyr1);
-        this.doublesWinners.push(plyr2);
+        
       }
+      this.doublesWinners.push(plyr1);
+      this.doublesWinners.push(plyr2);
       this.in=false;
       this.nextButton=true;
       this.competitveButton=true;
@@ -164,15 +166,14 @@ export class RoundsPage {
     }else if(this.matches[cnum-1].buttonColor1==='secondary'||this.matches[cnum-1].buttonColor2==='secondary'){
       if(bnum===1){
         this.matches[cnum-1].buttonColor1='primary';
-        this.doublesWinners.splice(plyr1);
-        this.doublesWinners.splice(plyr2);
+       
       }else if(bnum===2){
         this.matches[cnum-1].buttonColor2='primary';
-        this.doublesWinners.splice(plyr1);
-        this.doublesWinners.splice(plyr2);
+        
       }
       this.in=true;
-
+      this.doublesWinners.splice(plyr1);
+      this.doublesWinners.splice(plyr2);
       
     }
 
@@ -205,6 +206,7 @@ export class RoundsPage {
 
   }
 
+  
   
 
   competeShuff(){
@@ -305,6 +307,30 @@ export class RoundsPage {
     
   }
 
+  reset(){
+    let alert = this.alertCtrl.create({
+      title: 'Are you sure?',
+      message: "Are you sure you want to quit this game? You will lose all your progress.",
+      buttons:[
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.viewCtrl.dismiss();
+          }
+        }
+      ]
+    });
+    alert.present();
+    
+  }
+
   randomList(num){
     let m=num;
     for(var index=0;index<num;index++){
@@ -362,13 +388,13 @@ export class RoundsPage {
       console.log(this.doublesWinners);
       for(var index=0;index<this.picklePlayers.length;index++){
         for(var dex=0;dex<this.doublesWinners.length;dex++){
-          if(this.doublesWinners[dex].id===this.picklePlayers[index].id)
+          if(this.doublesWinners[dex].id==this.picklePlayers[index].id)
           {
             this.picklePlayers[index].wins++;
           }
         }
         if(this.singlesWinner!==undefined){
-          if(this.singlesWinner.id===this.picklePlayers[index].id)
+          if(this.singlesWinner.id==this.picklePlayers[index].id)
           {
             this.picklePlayers[index].wins++;
           }
@@ -381,6 +407,8 @@ export class RoundsPage {
       this.nextButton=false;
       this.competitveButton=false;
       this.in=true;
+      this.doublesWinners=[];
+      this.singlesWinner=new Playa(0);
     }else{
       let alert = this.alertCtrl.create({
         title: 'Select Winners',
@@ -460,6 +488,39 @@ export class RoundsPage {
     }
   }
 
+  results(){
+    if(this.rounds<2){
+      let alert = this.alertCtrl.create({
+        title:"Too Early",
+        subTitle:'There are not enough rounds to show results. Please try again after playing a round or two.',
+        buttons: ['ok']
+      });
+      alert.present();
+    }else if(this.nextButton==true){
+      let alert = this.alertCtrl.create({
+        title: 'Not Right Now',
+        subTitle: 'Looks like someone already won a game. Go to the next round to view results.',
+        buttons:['ok']
+      });
+      alert.present();
+    }else{
+      let realSpots=this.picklePlayers;
+      let round=this.rounds-1;
+      for(let player of this.picklePlayers){
+        player.winPerc=player.wins/round*100;
+      }
+      let players={
+        players: this.picklePlayers.sort(function(a,b){
+          return (b.wins)/(round)-(a.wins)/(round);
+        }),
+        rounds: round
+      };
+      this.navCtrl.push(ResultsPage,players);
+      this.picklePlayers=realSpots;
+    }
+    
+  }
+
 }
 class DoublesGame{
   buttonColor1='primary';
@@ -488,6 +549,7 @@ class SingleGame{
 
 class Playa {
   public wins=0;
+  public winPerc=0;
   public id: number;
   public bye=false;
   public singles=false;

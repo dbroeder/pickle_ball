@@ -18,8 +18,16 @@
 </ion-header>
 
 <ion-content padding>
-    
-  <h3 >Rounds Played: {{rounds}}</h3>
+  <ion-row class='top_row'>
+    <ion-col>
+      <h3 >Round Number: {{rounds}}</h3>
+    </ion-col>
+    <ion-col></ion-col>
+    <ion-col class='results'>
+      <button ion-button (click)='results()'>Results</button>
+    </ion-col>
+  </ion-row>
+  
   <ion-list >
     <ion-grid  *ngFor="let match of matches" >
       <ion-row>
@@ -46,8 +54,9 @@
   <ion-grid  *ngIf="singles">
     <ion-row>
         <ion-col>
-            <h5>Court #{{singleGame.court}}</h5>
-          </ion-col>
+          <h5>Court #{{singleGame.court}}</h5>
+        </ion-col>
+        
     </ion-row>
       <ion-row>
       <ion-col>
@@ -68,5 +77,6 @@
   <button ion-button (click)="nextRound()" block>Next Round</button>
   
   <button ion-button (click)="competeShuff()" block>Competitve Round</button>
+  <button ion-button (click)='reset()' block color='secondary'>Quit Game</button>
   
 </ion-content>
