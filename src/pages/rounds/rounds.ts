@@ -201,6 +201,7 @@ export class RoundsPage {
         this.sbuttonColor2='primary';
       }
       this.in=true;
+      this.singlesWinner=new Playa(0);
       
     }
 
@@ -507,7 +508,7 @@ export class RoundsPage {
       let realSpots=this.picklePlayers;
       let round=this.rounds-1;
       for(let player of this.picklePlayers){
-        player.winPerc=player.wins/round*100;
+        player.winPerc=Math.ceil(player.wins/round*100);
       }
       let players={
         players: this.picklePlayers.sort(function(a,b){
