@@ -220,7 +220,7 @@ export class RoundsPage {
     if(this.competetiveRound==false){
       let alert = this.alertCtrl.create({
         title: 'Continue?',
-        message: 'Once you set the competitve round you will proceed to a final round. You will not be able to continue to another round. Would you like to proceed?',
+        message: 'Once you set the competitve matchups, you will proceed to a final round. You will not be able to continue to another round. Would you like to proceed?',
         buttons: [
           {
             text:'yes',
