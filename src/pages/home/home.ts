@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
-import {RemovePlayerPage} from '../remove-player/remove-player'
 import {RoundsPage} from '../rounds/rounds';
 
 @Component({
@@ -18,13 +17,17 @@ export class HomePage {
   }
 
   play(){
-    if(this.playerNumber<2||this.playerNumber===undefined){
+    if(this.playerNumber<4||this.playerNumber===undefined){
       this.error=true;
     }else{
+      this.error=false;
       let num={
         number: this.playerNumber
       }
       let pate = this.modalCtrl.create(RoundsPage,num);
+      pate.onDidDismiss(data=>{
+        this.playerNumber=data;
+      });
       pate.present();
     }
     

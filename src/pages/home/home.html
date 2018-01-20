@@ -11,10 +11,10 @@
     <h2 >Enter Number of Players</h2>
   <ion-item>
     
-    <ion-input type="number" [(ngModel)]="playerNumber"></ion-input>
+    <ion-input type="number" placeholder="4+"[(ngModel)]="playerNumber"></ion-input>
   </ion-item>
   <p *ngIf='error'>
-    Enter a value greater than 2.
+    Enter a value greater than or equal to 4.
   </p>
   <button ion-button color="secondary" (click)="play()" block>Play</button>
   

@@ -20,7 +20,7 @@
 <ion-content padding>
   <ion-row class='top_row'>
     <ion-col>
-      <h3 >Round Number: {{rounds}}</h3>
+      <h3 >Round {{rounds}}</h3>
     </ion-col>
     <ion-col></ion-col>
     <ion-col class='results'>
@@ -51,7 +51,7 @@
       
   </ion-list> 
 
-  <ion-grid  *ngIf="singles">
+  <ion-grid  *ngIf="singlesRound">
     <ion-row>
         <ion-col>
           <h5>Court #{{singleGame.court}}</h5>
@@ -74,9 +74,9 @@
 
     <h5 *ngIf="byeRound">Bye: {{byePlayer.id}}</h5>
     
-  <button ion-button (click)="nextRound()" block>Next Round</button>
+  <button ion-button *ngIf='!competetiveRound' (click)="nextRound()" block>Next Random Round</button>
   
-  <button ion-button (click)="competeShuff()" block>Competitve Round</button>
+  <button ion-button *ngIf="!competetiveRound" (click)="competeButton()" block>Set A Competitve Round</button>
   <button ion-button (click)='reset()' block color='secondary'>Quit Game</button>
   
 </ion-content>
