@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { ViewController,AlertController, IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { ViewController,AlertController, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import {RemovePlayerPage} from '../remove-player/remove-player';
 import{ResultsPage} from '../results/results';
 
 
-@IonicPage()
+
 @Component({
   selector: 'page-rounds',
   templateUrl: 'rounds.html',
@@ -515,8 +515,18 @@ export class RoundsPage {
             num=dex;
           }
         }
-        this.picklePlayers.splice(num,1);
+        if(num==-1){
+          let alert = this.alertCtrl.create({
+            title: "Player Mixup",
+            subTitle: "Oops I think you alread deleted this player. Try again",
+            buttons: ['ok']
+          });
+          alert.present();
+        }else{
+          this.picklePlayers.splice(num,1);
         this.refresh();
+        }
+        
       }
     });
     remove.present();

@@ -11,8 +11,10 @@ $font-path: "../assets/fonts";
 // http://ionicframework.com/docs/theming/rtl-support/
 $app-direction: ltr;
 $background-color: lightgrey;
-$toolbar-background: yellow;
-$tabs-background: lightgrey;
+$toolbar-background:rgb(49, 160, 235);
+$tabs-background:rgb(49, 160, 235);
+$tabs-tab-color-active: black;
+
 
 @import "ionic.globals";
 
@@ -37,7 +39,7 @@ $tabs-background: lightgrey;
 
 $colors: (
   primary:    #488aff,
-  secondary: orange,
+  secondary: rgb(64, 180, 64),
   danger:     #f53d3d,
   light:      #f4f4f4,
   dark:       #222

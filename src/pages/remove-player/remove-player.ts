@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController,IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { AlertController, NavController, NavParams, ViewController } from 'ionic-angular';
 
 /**
  * Generated class for the RemovePlayerPage page.
@@ -8,7 +8,7 @@ import { AlertController,IonicPage, NavController, NavParams, ViewController } f
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-remove-player',
   templateUrl: 'remove-player.html',
