@@ -8,7 +8,7 @@ import {RoundsPage} from '../rounds/rounds';
 })
 export class HomePage {
 
-  playerNumber:number;
+  playerNumber:number=0;
   error=false;
 
 

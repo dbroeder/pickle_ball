@@ -9,16 +9,21 @@
 
 <ion-content padding>
     <h2 >Enter Number of Players</h2>
-  
+  <ion-item>
+    <ion-label fixed color="dark">Number:</ion-label>
+    <ion-input  type="number" placeholder="4+" [(ngModel)]="playerNumber"></ion-input>
+
+  </ion-item>
     
-    <ion-input class="input" type="number" placeholder="4+"[(ngModel)]="playerNumber"></ion-input>
   
   <p *ngIf='error'>
     Enter a value greater than or equal to 4.
   </p>
   <button ion-button color="secondary" (click)="play()" block>Play</button>
   <p class="directions">
-    Assign each player a number and the next page will randomly assign players a partner and a court. Then select the button with the winning team to keep track of who has the best winning percentage. 
+    Assign each player a number and the next page will randomly assign players a 
+    partner and a court. Then select the button with the winning team to keep 
+    track of who has the best winning percentage. 
   </p>
 
 </ion-content>
