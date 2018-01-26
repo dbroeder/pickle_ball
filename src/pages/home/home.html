@@ -11,7 +11,8 @@
     <h2 >Enter Number of Players</h2>
   <ion-item>
     <ion-label fixed color="dark">Number:</ion-label>
-    <ion-input [disabled]="false" type='number' placeholder="4+" [(ngModel)]="playerNumber"></ion-input>
+    <ion-input type="number" placeholder="4+" 
+    [(ngModel)]="playerNumber" (keyup.enter)="play()"></ion-input>
 
   </ion-item>
   

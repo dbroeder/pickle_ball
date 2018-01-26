@@ -2,18 +2,25 @@ import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import {RoundsPage} from '../rounds/rounds';
 
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
 
+export class HomePage{
+  
   playerNumber:number;
   error=false;
 
+ 
 
-  constructor(public navCtrl: NavController, public modalCtrl: ModalController) {
+  constructor( public navCtrl: NavController, public modalCtrl: ModalController) {
    
+  }
+
+  ionViewDidLoad(){
+    
   }
 
   play(){
