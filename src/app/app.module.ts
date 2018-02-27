@@ -4,48 +4,45 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { RemovePlayerPage} from '../pages/remove-player/remove-player'
 import { RoundsPage} from '../pages/rounds/rounds';
 import {ResultsPage } from '../pages/results/results';
-
+import {CreatePlayerPage} from '../pages/create-player/create-player';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import {IonicStorageModule} from '@ionic/storage';
+import {Storage} from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [
     MyApp,
     AboutPage,
-    ContactPage,
     HomePage,
     TabsPage,
     RemovePlayerPage,
     RoundsPage,
-    ResultsPage
+    ResultsPage,
+    CreatePlayerPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot({
-      name: '_playerdb',
-      driverOrder: ['sqlite','indexeddb','websql']
-    })
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     AboutPage,
-    ContactPage,
     HomePage,
     TabsPage,
     RemovePlayerPage,
     RoundsPage,
-    ResultsPage
+    ResultsPage,
+    CreatePlayerPage
   ],
-  providers: [
+  providers: [ 
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}

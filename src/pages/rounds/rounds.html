@@ -27,9 +27,9 @@
       <button ion-button (click)='results()'>Results</button>
     </ion-col>
   </ion-row>
-  
+  <div *ngIf="doublesFormat">
   <ion-list >
-    <ion-grid  *ngFor="let match of matches" >
+    <ion-grid  *ngFor="let match of doublesMatches" >
       <ion-row>
         <ion-col>
           <h5>Court #{{match.court}}</h5>
@@ -50,6 +50,34 @@
     </ion-grid>
       
   </ion-list> 
+  </div>
+
+  <div *ngIf="singlesFormat">
+      <ion-list >
+        <ion-grid  *ngFor="let match of singlesMatches" >
+          <ion-row>
+            <ion-col>
+              <h5>Court #{{match.court}}</h5>
+            </ion-col>
+          </ion-row>
+          <ion-row class='b_row'>
+          <ion-col>
+              <button ion-button [color]='match.buttonColor1' block 
+              (click)="winnerWinnerSingles(match.court,1,match.player1,match.player2)">{{match.player1.id}}</button>
+          </ion-col>
+          <ion-col col-auto>
+              <ion-label>Versus</ion-label>
+              
+          </ion-col>
+          <ion-col>
+              <button ion-button [color]='match.buttonColor2' block 
+              (click)="winnerWinnerSingles(match.court,2,match.player2,match.player1)">{{match.player2.id}}</button>
+          </ion-col>
+        </ion-row>
+        </ion-grid>
+          
+      </ion-list> 
+      </div>
 
   <ion-grid  *ngIf="singlesRound">
     <ion-row>
@@ -75,8 +103,7 @@
     <h5 *ngIf="byeRound">Bye: {{byePlayer.id}}</h5>
     
   <button ion-button *ngIf='!competetiveRound' (click)="nextRound()" block>Next Random Round</button>
-  
-  <button ion-button *ngIf="!competetiveRound" (click)="competeButton()" block>Set A Competitve Round</button>
+  <button ion-button *ngIf="!competetiveRound" (click)="competeButton()" block>{{competitiveText}}</button>
   <button ion-button (click)='reset()' block color='danger'>Quit Game</button>
   
 </ion-content>

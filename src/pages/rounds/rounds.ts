@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ViewController,AlertController, NavController, NavParams, ModalController } from 'ionic-angular';
+import { Platform,ViewController,AlertController, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import {RemovePlayerPage} from '../remove-player/remove-player';
 import{ResultsPage} from '../results/results';
@@ -13,7 +13,7 @@ import{ResultsPage} from '../results/results';
 export class RoundsPage {
   playerNumber:number;
   picklePlayers = [];
-  matches = [];
+  doublesMatches = [];
   in=true;
   singlesRound=false;
   singleGame:SingleGame;
@@ -25,19 +25,32 @@ export class RoundsPage {
   rounds;
   error=false;
   singlesWinner:Playa;
-  doublesWinners=[];
+  winners=[];
   competetiveRound=false;
   selectedButtons=[];
   singlesButton=false;
+  gameType="";
+  singlesMatches=[];
+  doublesFormat=false;
+  singlesFormat=false;
+  competitiveText="Set a Competitive Round";
 
-  constructor(public viewCtrl: ViewController,public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
-   
+  constructor(public platform: Platform,public viewCtrl: ViewController,public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
+    this.platform.registerBackButtonAction(()=>{
+      this.reset();
+    })
   }
 
   ionViewDidLoad() {
     this.rounds=1;
     this.playerNumber=this.navParams.get('number');
-     console.log('Welcome to Rounds Play');
+    this.gameType=this.navParams.get('gameType');
+    console.log(this.gameType);
+     if(this.gameType=="singles"){
+      this.singlesFormat=true;
+     }else{
+       this.doublesFormat=true;
+     }
      this.picklePlayers=[];
       for(var person=1; person<=this.playerNumber;person++){
       this.picklePlayers.push(new Playa(person));
@@ -76,8 +89,39 @@ export class RoundsPage {
     }
   }
 
+  singlesRounds(){
+    this.singlesMatches=[];
+    this.selectedButtons=[];
+    if(this.playerNumber%2==0){
+      for(var index=0;index<this.picklePlayers.length;index+=2)
+      {
+        this.selectedButtons.push(false);
+        this.singlesMatches.push(new SingleGame(this.picklePlayers[index],this.picklePlayers[index+1],index/2+1))
+      }
+     
+    }
+    else{
+      this.allHaveHadByes();
+      this.byeRound=true;
+      while(this.picklePlayers[this.picklePlayers.length-1].playedBye){
+        this.randomList(this.picklePlayers.length);
+      }
+      for(let index=0;index<this.picklePlayers.length-1;index+=2)
+      {
+        this.selectedButtons.push(false);
+        this.singlesMatches.push(new SingleGame(this.picklePlayers[index],this.picklePlayers[index+1],index/2+1))
+      }
+      this.byePlayer=this.picklePlayers[this.picklePlayers.length-1];
+    }
+    console.log(this.singlesMatches.length);
+  }
+
+
   matchups(){
-    this.matches=[];
+    if(this.singlesFormat){
+      this.singlesRounds();
+    }else{
+    this.doublesMatches=[];
     this.selectedButtons=[];
     this.singlesButton=false;
     if(this.picklePlayers.length%4===0){
@@ -85,7 +129,7 @@ export class RoundsPage {
       this.singlesRound=false;
       for(var index=0;index<this.picklePlayers.length;index+=4){
         this.selectedButtons.push(false);
-        this.matches.push(new DoublesGame(this.picklePlayers[index],this.picklePlayers[index+1],this.picklePlayers[index+2],this.picklePlayers[index+3],index/4+1))
+        this.doublesMatches.push(new DoublesGame(this.picklePlayers[index],this.picklePlayers[index+1],this.picklePlayers[index+2],this.picklePlayers[index+3],index/4+1))
       }
     }else if(this.picklePlayers.length%4===1){
       this.byeRound=true;
@@ -96,7 +140,7 @@ export class RoundsPage {
       }
       for(var dex=0;dex<this.picklePlayers.length-1;dex+=4){
         this.selectedButtons.push(false);
-        this.matches.push(new DoublesGame(this.picklePlayers[dex],this.picklePlayers[dex+1],this.picklePlayers[dex+2],this.picklePlayers[dex+3],dex/4+1))
+        this.doublesMatches.push(new DoublesGame(this.picklePlayers[dex],this.picklePlayers[dex+1],this.picklePlayers[dex+2],this.picklePlayers[dex+3],dex/4+1))
       }
       this.byePlayer=this.picklePlayers[this.picklePlayers.length-1];
     }
@@ -124,7 +168,7 @@ export class RoundsPage {
       this.singlesRound=true;
       for(var index1=0;index1<this.picklePlayers.length-3;index1+=4){
         this.selectedButtons.push(false);
-        this.matches.push(new DoublesGame(this.picklePlayers[index1],this.picklePlayers[index1+1],this.picklePlayers[index1+2],this.picklePlayers[index1+3],index1/4+1))
+        this.doublesMatches.push(new DoublesGame(this.picklePlayers[index1],this.picklePlayers[index1+1],this.picklePlayers[index1+2],this.picklePlayers[index1+3],index1/4+1))
       }
     }
     else{
@@ -146,73 +190,107 @@ export class RoundsPage {
       this.singleGame=new SingleGame(player11,player22,court1);
       for(var index2=0;index2<this.picklePlayers.length-2;index2+=4){
         this.selectedButtons.push(false);
-        this.matches.push(new DoublesGame(this.picklePlayers[index2],this.picklePlayers[index2+1],this.picklePlayers[index2+2],this.picklePlayers[index2+3],index2/4+1))
+        this.doublesMatches.push(new DoublesGame(this.picklePlayers[index2],this.picklePlayers[index2+1],this.picklePlayers[index2+2],this.picklePlayers[index2+3],index2/4+1))
       }
     }
+  }
     
   }
 
   winnerWinnerDoubles(cnum,bnum,plyr1,plyr2,plyr3,plyr4){
-    if(this.matches[cnum-1].buttonColor1==='primary'&&this.matches[cnum-1].buttonColor2==='primary'){
+    if(this.doublesMatches[cnum-1].buttonColor1==='primary'&&this.doublesMatches[cnum-1].buttonColor2==='primary'){
       if(bnum===1)
       {
-        this.matches[cnum-1].buttonColor1='secondary';
+        this.doublesMatches[cnum-1].buttonColor1='secondary';
         this.selectedButtons[cnum-1]=true;
         
       }else if(bnum===2){
-        this.matches[cnum-1].buttonColor2='secondary';
+        this.doublesMatches[cnum-1].buttonColor2='secondary';
         this.selectedButtons[cnum-1]=true;
       }
-      this.doublesWinners.push(plyr1);
-      this.doublesWinners.push(plyr2);
+      this.winners.push(plyr1);
+      this.winners.push(plyr2);
       this.in=false;
 
 
       
-    }else if(this.matches[cnum-1].buttonColor1==='secondary'||this.matches[cnum-1].buttonColor2==='secondary'){
+    }else if(this.doublesMatches[cnum-1].buttonColor1==='secondary'||this.doublesMatches[cnum-1].buttonColor2==='secondary'){
       if(bnum===1){
-        this.matches[cnum-1].buttonColor1='primary';
+        this.doublesMatches[cnum-1].buttonColor1='primary';
         this.selectedButtons[cnum-1]=false;
        
       }else if(bnum===2){
-        this.matches[cnum-1].buttonColor2='primary';
+        this.doublesMatches[cnum-1].buttonColor2='primary';
         this.selectedButtons[cnum-1]=false;
         
       }
       this.in=true;
-      this.doublesWinners.splice(plyr1);
-      this.doublesWinners.splice(plyr2);
+      this.winners.splice(plyr1);
+      this.winners.splice(plyr2);
       
     }
 
   }
 
-  winnerWinnerSingles(num,plyr1,plyr2){
-    if(this.sbuttonColor1==='primary'&&this.sbuttonColor2==='primary'){
-      if(num===1)
-      {
-        this.sbuttonColor1='secondary';
-      }else if(num===2){
-        this.sbuttonColor2='secondary';
+  winnerWinnerSingles(num,bnum,plyr1,plyr2){
+    if(this.singlesMatches){
+      if(this.singlesMatches[num-1].buttonColor1==='primary'&&this.singlesMatches[num-1].buttonColor2==='primary'){
+        if(bnum===1)
+        {
+          this.singlesMatches[num-1].buttonColor1='secondary';
+          this.selectedButtons[num-1]=true;
+          
+        }else if(bnum===2){
+          this.singlesMatches[num-1].buttonColor2='secondary';
+          this.selectedButtons[num-1]=true;
+        }
+        this.winners.push(plyr1);
+        this.in=false;
+  
+  
+        
+      }else if(this.singlesMatches[num-1].buttonColor1==='secondary'||this.singlesMatches[num-1].buttonColor2==='secondary'){
+        if(bnum===1){
+          this.singlesMatches[num-1].buttonColor1='primary';
+          this.selectedButtons[num-1]=false;
+         
+        }else if(bnum===2){
+          this.singlesMatches[num-1].buttonColor2='primary';
+          this.selectedButtons[num-1]=false;
+          
+        }
+        this.in=true;
+        this.winners.splice(plyr1);
+        
       }
-      this.singlesWinner=plyr1;
-      this.in=false;
-
-      this.singlesButton=true;
-
-      
-    }else if(this.sbuttonColor1==='secondary'||this.sbuttonColor2==='secondary'){
-      if(num===1)
-      {
-        this.sbuttonColor1='primary';
-      }else if(num===2){
-        this.sbuttonColor2='primary';
+    }else{
+      if(this.sbuttonColor1==='primary'&&this.sbuttonColor2==='primary'){
+        if(num===1)
+        {
+          this.sbuttonColor1='secondary';
+        }else if(num===2){
+          this.sbuttonColor2='secondary';
+        }
+        this.singlesWinner=plyr1;
+        this.in=false;
+  
+        this.singlesButton=true;
+  
+        
+      }else if(this.sbuttonColor1==='secondary'||this.sbuttonColor2==='secondary'){
+        if(num===1)
+        {
+          this.sbuttonColor1='primary';
+        }else if(num===2){
+          this.sbuttonColor2='primary';
+        }
+        this.singlesButton=false;
+        this.in=true;
+        this.singlesWinner=new Playa(0);
+        
       }
-      this.singlesButton=false;
-      this.in=true;
-      this.singlesWinner=new Playa(0);
-      
     }
+    
 
   }
 
@@ -254,80 +332,98 @@ export class RoundsPage {
   }
   
 
-  competeShuff(){
-      this.re_align_Players();
-      this.picklePlayers.sort(function(a,b){
-        if((((b.winPerc)-(a.winPerc))==0)){
-          if(((a.roundsPlayed)-(b.roundsPlayed))==0)
-          {
-            return (a.id)-(b.id);
-          }else{
-            return (b.roundsPlayed)-(a.roundsPlayed);
-          }
-          
+  competeShuff() {
+    this.re_align_Players();
+    this.picklePlayers.sort(function (a, b) {
+      if ((((b.winPerc) - (a.winPerc)) == 0)) {
+        if (((a.roundsPlayed) - (b.roundsPlayed)) == 0) {
+          return (a.id) - (b.id);
+        } else {
+          return (b.roundsPlayed) - (a.roundsPlayed);
         }
-        else{
-          return (b.winPerc)-(a.winPerc);
+
+      }
+      else {
+        return (b.winPerc) - (a.winPerc);
+      }
+    });
+    this.rounds++;
+    console.log(this.picklePlayers);
+    if (this.doublesFormat) {
+      this.doublesMatches = [];
+      this.selectedButtons = [];
+      this.singlesButton = false;
+      if (this.picklePlayers.length % 4 === 0) {
+        this.byeRound = false;
+        this.singlesRound = false;
+        for (var index = 0; index < this.picklePlayers.length; index += 4) {
+          this.doublesMatches.push(new DoublesGame(this.picklePlayers[index], this.picklePlayers[index + 3], this.picklePlayers[index + 2], this.picklePlayers[index + 1], index / 4 + 1))
         }
-      });
-      this.rounds++;
-      console.log(this.picklePlayers);
-      this.matches=[];
+      } else if (this.picklePlayers.length % 4 === 1) {
+        this.byeRound = true;
+        this.singlesRound = false;
+
+        for (var dex = 0; dex < this.picklePlayers.length - 1; dex += 4) {
+          this.doublesMatches.push(new DoublesGame(this.picklePlayers[dex], this.picklePlayers[dex + 3], this.picklePlayers[dex + 2], this.picklePlayers[dex + 1], dex / 4 + 1))
+        }
+        this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
+
+      }
+      else if (this.picklePlayers.length % 4 === 3) {
+
+        this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
+
+        var player1 = this.picklePlayers[this.picklePlayers.length - 2];
+
+        var player2 = this.picklePlayers[this.picklePlayers.length - 3];
+
+        var court = Math.floor(this.picklePlayers.length / 4) + 1;
+        this.singleGame = new SingleGame(player1, player2, court);
+        this.sbuttonColor1 = 'primary';
+        this.sbuttonColor2 = 'primary';
+
+        this.byeRound = true;
+        this.singlesRound = true;
+        for (var index1 = 0; index1 < this.picklePlayers.length - 3; index1 += 4) {
+          this.doublesMatches.push(new DoublesGame(this.picklePlayers[index1], this.picklePlayers[index1 + 3], this.picklePlayers[index1 + 2], this.picklePlayers[index1 + 1], index1 / 4 + 1))
+        }
+      }
+      else {
+        this.byeRound = false;
+        this.singlesRound = true;
+        this.sbuttonColor1 = 'primary';
+        this.sbuttonColor2 = 'primary';
+        var player11 = this.picklePlayers[this.picklePlayers.length - 1];
+        var player22 = this.picklePlayers[this.picklePlayers.length - 2];
+
+        var court1 = Math.floor(this.picklePlayers.length / 4) + 1;
+        this.singleGame = new SingleGame(player11, player22, court1);
+        for (var index2 = 0; index2 < this.picklePlayers.length - 2; index2 += 4) {
+          this.doublesMatches.push(new DoublesGame(this.picklePlayers[index2], this.picklePlayers[index2 + 3], this.picklePlayers[index2 + 2], this.picklePlayers[index2 + 1], index2 / 4 + 1))
+        }
+      }
+
+      this.in = true;
+    }else if(this.singlesFormat){
+      this.singlesMatches=[];
       this.selectedButtons=[];
-      this.singlesButton=false;
-      if(this.picklePlayers.length%4===0){
+      if(this.picklePlayers.length%2==0){
         this.byeRound=false;
-        this.singlesRound=false;
-        for(var index=0;index<this.picklePlayers.length;index+=4){
-          this.matches.push(new DoublesGame(this.picklePlayers[index],this.picklePlayers[index+3],this.picklePlayers[index+2],this.picklePlayers[index+1],index/4+1))
+        for(let index=0;index<this.picklePlayers.length;index+=2){
+          this.singlesMatches.push(new SingleGame(this.picklePlayers[index],this.picklePlayers[index+1],index/2+1));
         }
-      }else if(this.picklePlayers.length%4===1){
+      }
+      else if(this.picklePlayers.length%2==1){
         this.byeRound=true;
-        this.singlesRound=false;
-        
-        for(var dex=0;dex<this.picklePlayers.length-1;dex+=4){
-          this.matches.push(new DoublesGame(this.picklePlayers[dex],this.picklePlayers[dex+3],this.picklePlayers[dex+2],this.picklePlayers[dex+1],dex/4+1))
-        }
         this.byePlayer=this.picklePlayers[this.picklePlayers.length-1];
-
-      }
-      else if(this.picklePlayers.length%4===3){
-       
-        this.byePlayer=this.picklePlayers[this.picklePlayers.length-1];
-        
-        var player1=this.picklePlayers[this.picklePlayers.length-2];
-        
-        var player2=this.picklePlayers[this.picklePlayers.length-3];
-       
-        var court=Math.floor(this.picklePlayers.length/4)+1;
-        this.singleGame=new SingleGame(player1,player2,court);
-        this.sbuttonColor1='primary';
-        this.sbuttonColor2='primary';
-       
-        this.byeRound=true;
-        this.singlesRound=true;
-        for(var index1=0;index1<this.picklePlayers.length-3;index1+=4){
-          this.matches.push(new DoublesGame(this.picklePlayers[index1],this.picklePlayers[index1+3],this.picklePlayers[index1+2],this.picklePlayers[index1+1],index1/4+1))
+        for(let index=0;index<this.picklePlayers.length-1;index+=2){
+          this.singlesMatches.push(new SingleGame(this.picklePlayers[index],this.picklePlayers[index+1],index/2+1));
         }
       }
-      else{
-        this.byeRound=false;
-        this.singlesRound=true;
-        this.sbuttonColor1='primary';
-        this.sbuttonColor2='primary';
-        var player11=this.picklePlayers[this.picklePlayers.length-1];
-        var player22=this.picklePlayers[this.picklePlayers.length-2];
-       
-        var court1=Math.floor(this.picklePlayers.length/4)+1;
-        this.singleGame=new SingleGame(player11,player22,court1);
-        for(var index2=0;index2<this.picklePlayers.length-2;index2+=4){
-          this.matches.push(new DoublesGame(this.picklePlayers[index2],this.picklePlayers[index2+3],this.picklePlayers[index2+2],this.picklePlayers[index2+1],index2/4+1))
-        }
-      }
+    }
 
-      this.in=true;
-    
-    
+
+
   }
 
   reset(){
@@ -393,7 +489,7 @@ export class RoundsPage {
       this.refresh();
 
       this.in=true;
-      this.doublesWinners=[];
+      this.winners=[];
       this.singlesWinner=new Playa(0);
     }else if(this.competetiveRound==true){
       let alert = this.alertCtrl.create({
@@ -415,8 +511,8 @@ export class RoundsPage {
 
   re_align_Players(){
     for(var index=0;index<this.picklePlayers.length;index++){
-      for(var dex=0;dex<this.doublesWinners.length;dex++){
-        if(this.doublesWinners[dex].id==this.picklePlayers[index].id)
+      for(var dex=0;dex<this.winners.length;dex++){
+        if(this.winners[dex].id==this.picklePlayers[index].id)
         {
           this.picklePlayers[index].wins++;
         }
@@ -428,19 +524,33 @@ export class RoundsPage {
         }
       } 
     }
-    for(var idex=0;idex<this.matches.length;idex++){
+    for(var idex=0;idex<this.doublesMatches.length;idex++){
       
       for(var dd=0;dd<4;dd++){
         if(this.selectedButtons[idex]==true){
-          this.matches[idex].players[dd].roundsPlayed++;
+          this.doublesMatches[idex].players[dd].roundsPlayed++;
         }
         for(var num=0;num<this.picklePlayers.length;num++){
-          if(this.picklePlayers[num].id==this.matches[idex].players[dd].id){
-            this.picklePlayers[num]=this.matches[idex].players[dd];
+          if(this.picklePlayers[num].id==this.doublesMatches[idex].players[dd].id){
+            this.picklePlayers[num]=this.doublesMatches[idex].players[dd];
           }
         }
       }
 
+    }
+    for (let idex = 0; idex < this.singlesMatches.length; idex++) {
+      if (this.selectedButtons[idex] == true) {
+        this.singlesMatches[idex].player1.roundsPlayed++;
+        this.singlesMatches[idex].player2.roundsPlayed++;
+      }
+      for (let num = 0; num < this.picklePlayers.length; num++) {
+        if (this.picklePlayers[num].id == this.singlesMatches[idex].player1.id) {
+          this.picklePlayers[num] = this.singlesMatches[idex].player1;
+        }
+        if (this.picklePlayers[num].id == this.singlesMatches[idex].player2.id) {
+          this.picklePlayers[num] = this.singlesMatches[idex].player2;
+        }
+      }
     }
     var count=0;
     if(this.singleGame!==undefined){
@@ -615,6 +725,8 @@ class SingleGame{
   court:number;
   player1:Playa;
   player2:Playa;
+  buttonColor1='primary';
+  buttonColor2='primary';
   constructor(player1,player2,num){
     this.player1=player1;
     this.player2=player2;

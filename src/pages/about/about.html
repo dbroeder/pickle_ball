@@ -1,11 +1,31 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Leage Play
+      League Play
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-label>Has not been developed yet.</ion-label>
+    <ion-row >
+        <ion-col>
+          <h4>Name</h4>
+        </ion-col>
+        <ion-col>
+          <h4>Display Name</h4>
+        </ion-col>
+        <ion-col>
+          <h4>Win Percentage</h4>
+        </ion-col>
+    </ion-row>
+    <h6 *ngIf='!playersExist'>No players exist at this time.</h6>
+  <button ion-item *ngFor='let player of players' (click)='openPlayer(player)'>
+    <ion-row >
+      <ion-col>{{player.name}}</ion-col>
+      <ion-col>{{player.displayName}}</ion-col>
+      <ion-col>{{player.winPercentage}}</ion-col>
+    </ion-row>
+  </button>
+
+  <button ion-button (click)='createPlayer()'>Create Player</button>
 </ion-content>

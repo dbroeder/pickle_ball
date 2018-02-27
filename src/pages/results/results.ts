@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import {Platform, NavController, NavParams } from 'ionic-angular';
 
 
 
@@ -11,7 +11,10 @@ import { NavController, NavParams } from 'ionic-angular';
 export class ResultsPage {
   players;
   rounds;
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public platform: Platform,public navCtrl: NavController, public navParams: NavParams) {
+    platform.registerBackButtonAction(()=>{
+      this.navCtrl.pop();
+    })
   }
 
   ionViewDidLoad() {

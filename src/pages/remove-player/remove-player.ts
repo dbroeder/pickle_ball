@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, NavController, NavParams, ViewController } from 'ionic-angular';
+import { AlertController, NavController, NavParams, ViewController, Platform } from 'ionic-angular';
 
 /**
  * Generated class for the RemovePlayerPage page.
@@ -18,7 +18,10 @@ export class RemovePlayerPage {
   playerNum:number;
   totalNumofPlayers:number;
 
-  constructor(public alertCtrl: AlertController ,public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
+  constructor(public platform: Platform, public alertCtrl: AlertController ,public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
+    platform.registerBackButtonAction(()=>{
+      this.viewCtrl.dismiss();
+    })
   }
 
   ionViewDidLoad() {

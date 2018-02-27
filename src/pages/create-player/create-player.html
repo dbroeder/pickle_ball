@@ -1,0 +1,46 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-title *ngIf="editPlayer">Create Player</ion-title>
+    <ion-title *ngIf="!editPlayer">Edit Player</ion-title>
+    <ion-buttons start>
+        <button ion-button icon-only (click)="goBack()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+      </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <div *ngIf="editPlayer">
+    <h1 >Create Player</h1>
+    <h5>Name</h5>
+    <ion-input type="text" [(ngModel)]="name" ></ion-input>
+    <h5 *ngIf="!dispNameError">Three Character Nickname</h5>
+    <h5 *ngIf="dispNameError" class="display">Player Rating</h5>
+    <ion-input type="text" placeholder="Three Characters" [(ngModel)]="displayName"></ion-input>
+    <h5 *ngIf="!ratingError">Player Rating</h5>
+    <h5 *ngIf="ratingError" class="rating">Player Rating</h5>
+    <ion-input type="number" placeholder="1.0-5.0" [(ngModel)]="rating"></ion-input>
+    <button ion-button (click)="createPlayer()">Create Player</button>
+  </div>
+
+  <div *ngIf="!editPlayer">
+    <h1>Edit Player</h1>
+    <h5>Name</h5>
+    <ion-input type="text" [(ngModel)]="playerList[this.player_id].name" ></ion-input>
+    <h5 *ngIf="!dispNameError">Three Character Display Name</h5>
+    <h5 *ngIf="dispNameError" class="display">Player Rating</h5>
+    <ion-input type="text" placeholder="Three Characters" [(ngModel)]="playerList[this.player_id].displayName"></ion-input>
+    <h5 *ngIf="!ratingError">Player Rating</h5>
+    <h5 *ngIf="ratingError" class="rating">Player Rating</h5>
+    <ion-input type="number" placeholder="1.0-5.0" [(ngModel)]="playerList[this.player_id].rating"></ion-input>
+    <button ion-button (click)="savePlayer()">Save Player</button>
+  </div>
+  
+
+</ion-content>
