@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {  NavController, NavParams, AlertController,ViewController } from 'ionic-angular';
-import {Storage} from '@ionic/storage';
+import {PlayersProvider} from '../../providers/players/players';
 import { ModalController } from 'ionic-angular/components/modal/modal-controller';
 
 
@@ -23,13 +23,15 @@ export class CreatePlayerPage {
   dispNameError=false;
   ratingError=false;
 
-  constructor(public viewCtrl: ViewController,public alertCtrl: AlertController,public navCtrl: NavController, public navParams: NavParams,public storage: Storage) {
-    this.storage.get('players').then((data)=>{
-      this.playerList=data;
-    });
-    this.storage.get('playerLength').then((data)=>{
-      this.totalPlayerNumber=data;
-    })
+  constructor(public viewCtrl: ViewController,
+    public alertCtrl: AlertController,
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public playerProv: PlayersProvider) 
+    {
+
+    this.playerList=this.playerProv.get('players');
+    this.totalPlayerNumber=this.playerProv.get('playerLength');
     this.player_id=navParams.get('id');
     console.log(this.player_id);
     if(this.player_id==-1||this.player_id==undefined){
@@ -88,8 +90,8 @@ export class CreatePlayerPage {
           _id: this.totalPlayerNumber+1
         }
         this.playerList.push(newPlayer);
-        this.storage.set('players',this.playerList);
-        this.storage.set('playerLength',1);
+        this.playerProv.set('players',this.playerList);
+        this.playerProv.set('playerLength',1);
       }else{
         let newPlayer={
           name: this.name,
@@ -102,19 +104,11 @@ export class CreatePlayerPage {
         }
         this.playerList=[];
         this.playerList.push(newPlayer);
-        this.storage.set('players',this.playerList);
-        this.storage.set('playerLength',this.totalPlayerNumber+1);
+        this.playerProv.set('players',this.playerList);
+        this.playerProv.set('playerLength',this.totalPlayerNumber+1);
         
       }
       this.viewCtrl.dismiss();
-    }
-    
-  }
-
-  savePlayer(){
-    if(this.checkErrors(this.playerList[this.player_id].displayName,this.playerList[this.player_id].rating)){
-      this.storage.set('players',this.playerList);
-      this.viewCtrl.dismiss()
     }
     
   }

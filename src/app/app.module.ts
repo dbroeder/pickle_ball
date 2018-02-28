@@ -14,6 +14,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {Storage} from '@ionic/storage';
 import { IonicStorageModule } from '@ionic/storage';
+import { PlayersProvider } from '../providers/players/players';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { IonicStorageModule } from '@ionic/storage';
   providers: [ 
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    PlayersProvider
   ]
 })
 export class AppModule {}
