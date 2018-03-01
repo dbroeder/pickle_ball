@@ -14,14 +14,16 @@ export class CreatePlayerPage {
 
   player_id;
   player;
-  editPlayer;
+  editPlayerBool=false;
   name;
   displayName;
   rating;
   playerList;
   totalPlayerNumber;
-  dispNameError=false;
+  nameDupError=false;
   ratingError=false;
+  createPlayerBool=false;
+
 
   constructor(public viewCtrl: ViewController,
     public alertCtrl: AlertController,
@@ -30,16 +32,20 @@ export class CreatePlayerPage {
     public playerProv: PlayersProvider) 
     {
 
-    this.playerList=this.playerProv.get('players');
+    this.playerProv.get('players').then((val)=>{
+      this.playerList=val;
+    });
+    this.playerProv.get('playerLength').then((val)=>{
+      this.totalPlayerNumber=val;
+    });
     this.totalPlayerNumber=this.playerProv.get('playerLength');
     this.player_id=navParams.get('id');
-    console.log(this.player_id);
     if(this.player_id==-1||this.player_id==undefined){
-      console.log('here');
-      this.editPlayer=true;
+      console.log('new player');
+      this.createPlayerBool=true;
     }else{
       this.player=this.getPlayer(this.player_id);
-      this.editPlayer=false;
+      this.editPlayerBool=true;
       
     }
   }
@@ -53,7 +59,7 @@ export class CreatePlayerPage {
   }
 
   ionViewDidLoad() {
-    console.log(this.totalPlayerNumber);
+    
   }
 
   goBack(){
@@ -61,11 +67,12 @@ export class CreatePlayerPage {
   }
 
   checkErrors(string, num){
-    var unique=true;
-    for(let player of this.playerList){
-      if(player.displayName==string)
+    let unique=true;
+    if(this.playerList!=undefined){
+      for(let player of this.playerList){
+      if(player.name==string)
       {
-        this.dispNameError=true;
+        this.nameDupError=true;
         unique=false;
       }
     }
@@ -74,12 +81,16 @@ export class CreatePlayerPage {
       unique=false;
     }
     return unique;
+    }else{
+      return unique;
+    }
+    
   }
 
   createPlayer(){
     console.log(this.totalPlayerNumber);
-    if(this.checkErrors(this.displayName,this.rating)){
-      if(this.totalPlayerNumber!==undefined){
+    if(this.checkErrors(this.name,this.rating)){
+      if(this.totalPlayerNumber!=undefined){
         let newPlayer={
           name: this.name,
           displayName: this.displayName,
@@ -91,7 +102,7 @@ export class CreatePlayerPage {
         }
         this.playerList.push(newPlayer);
         this.playerProv.set('players',this.playerList);
-        this.playerProv.set('playerLength',1);
+        this.playerProv.set('playerLength',this.totalPlayerNumber+1);
       }else{
         let newPlayer={
           name: this.name,
@@ -103,11 +114,13 @@ export class CreatePlayerPage {
           _id: 0
         }
         this.playerList=[];
+        console.log(newPlayer);
         this.playerList.push(newPlayer);
         this.playerProv.set('players',this.playerList);
-        this.playerProv.set('playerLength',this.totalPlayerNumber+1);
+        this.playerProv.set('playerLength','1');
         
       }
+      
       this.viewCtrl.dismiss();
     }
     

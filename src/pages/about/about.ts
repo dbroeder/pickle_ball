@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController} from 'ionic-angular';
-import {Storage} from '@ionic/storage';
 import {CreatePlayerPage} from '../create-player/create-player';
+import {PlayersProvider} from '../../providers/players/players';
 
 @Component({
   selector: 'page-about',
@@ -9,34 +9,37 @@ import {CreatePlayerPage} from '../create-player/create-player';
 })
 export class AboutPage {
 
-  playersExist;
-  players=[];
+  playersDontExist=false;
+  players;
 
 
-  constructor(public navCtrl: NavController,public storage: Storage, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, 
+    public modalCtrl: ModalController,
+    public playerProv: PlayersProvider) {
    
     
   }
 
   ionViewDidLoad(){
     this.getPlayers();
-    if(this.players==undefined){
-      this.playersExist=false;
-    }else{
-      this.playersExist=true;
-    }
+    
   }
 
   getPlayers(){
-    this.storage.get('players').then((data)=>{
-      this.players=data;
-      console.log(this.players);
+    console.log(this.playerProv.get('players'))
+    this.playerProv.get('players').then((value)=>{
+      this.players=value;
     });
+    if(this.players==undefined){
+      this.playersDontExist=true;
+    }else{
+      this.playersDontExist=false;
+    }
   }
 
   openPlayer(player){
     let modal = this.modalCtrl.create(CreatePlayerPage,player.id);
-    modal.onDidDismiss(data=>{
+    modal.onDidDismiss(()=>{
       this.getPlayers();
     });
     modal.present();
@@ -47,7 +50,7 @@ export class AboutPage {
       id:-1
     };
     let modal = this.modalCtrl.create(CreatePlayerPage,id);
-    modal.onDidDismiss(data=>{
+    modal.onDidDismiss(()=>{
       this.getPlayers();
     });
     modal.present();

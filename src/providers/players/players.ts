@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {Storage} from '@ionic/storage';
 
@@ -11,16 +10,19 @@ import {Storage} from '@ionic/storage';
 @Injectable()
 export class PlayersProvider {
 
-  constructor(public http: HttpClient, public storage: Storage) {
+  constructor( public storage: Storage) {
     
   }
 
   get(dataBaseName: any) {
-    this.storage.get(dataBaseName).then((data) => {
+    
+    console.log("Player Provider getting data from "+dataBaseName);
+    return this.storage.get(dataBaseName).then((data) => {
       return data;
     });
   }
   set(storeTag:any,item: any){
+    console.log("Setting value: "+item+" with key: "+storeTag);
     this.storage.set(storeTag,item);
   }
 
