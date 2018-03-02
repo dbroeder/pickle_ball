@@ -15,6 +15,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import {Storage} from '@ionic/storage';
 import { IonicStorageModule } from '@ionic/storage';
 import { PlayersProvider } from '../providers/players/players';
+import {SelectPlayerPage} from '../pages/select-player/select-player';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { PlayersProvider } from '../providers/players/players';
     RemovePlayerPage,
     RoundsPage,
     ResultsPage,
-    CreatePlayerPage
+    CreatePlayerPage,
+    SelectPlayerPage
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import { PlayersProvider } from '../providers/players/players';
     RemovePlayerPage,
     RoundsPage,
     ResultsPage,
-    CreatePlayerPage
+    CreatePlayerPage,
+    SelectPlayerPage
   ],
   providers: [ 
     StatusBar,
