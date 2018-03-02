@@ -26,19 +26,26 @@ export class AboutPage {
   }
 
   getPlayers(){
-    console.log(this.playerProv.get('players'))
+    
     this.playerProv.get('players').then((value)=>{
       this.players=value;
+      if(this.players==undefined){
+        this.playersDontExist=true;
+      }else{
+        this.playersDontExist=false;
+      }
+      console.log(this.players)
     });
-    if(this.players==undefined){
-      this.playersDontExist=true;
-    }else{
-      this.playersDontExist=false;
-    }
+    
+    
   }
 
   openPlayer(player){
-    let modal = this.modalCtrl.create(CreatePlayerPage,player.id);
+    console.log(player);
+    let passParams={
+      id:player._id
+    };
+    let modal = this.modalCtrl.create(CreatePlayerPage,passParams);
     modal.onDidDismiss(()=>{
       this.getPlayers();
     });

@@ -34,20 +34,21 @@ export class CreatePlayerPage {
 
     this.playerProv.get('players').then((val)=>{
       this.playerList=val;
+      if(this.player_id==-1||this.player_id==undefined){
+        console.log('new player');
+        this.createPlayerBool=true;
+      }else{
+        this.player=this.getPlayer(this.player_id);
+        this.editPlayerBool=true;
+        
+      }
     });
     this.playerProv.get('playerLength').then((val)=>{
       this.totalPlayerNumber=val;
     });
-    this.totalPlayerNumber=this.playerProv.get('playerLength');
+    
     this.player_id=navParams.get('id');
-    if(this.player_id==-1||this.player_id==undefined){
-      console.log('new player');
-      this.createPlayerBool=true;
-    }else{
-      this.player=this.getPlayer(this.player_id);
-      this.editPlayerBool=true;
-      
-    }
+    
   }
 
   getPlayer(num){
