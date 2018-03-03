@@ -13,7 +13,6 @@ export class AboutPage {
   playersDontExist=false;
   players;
 
-
   constructor(public navCtrl: NavController, 
     public modalCtrl: ModalController,
     public playerProv: PlayersProvider) {

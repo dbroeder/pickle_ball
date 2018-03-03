@@ -3,9 +3,6 @@ import {  NavController, NavParams, AlertController,ViewController } from 'ionic
 import {PlayersProvider} from '../../providers/players/players';
 import { ModalController } from 'ionic-angular/components/modal/modal-controller';
 
-
-
-
 @Component({
   selector: 'page-create-player',
   templateUrl: 'create-player.html',
