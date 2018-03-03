@@ -38,7 +38,7 @@ export class AboutPage {
     
     this.playerProv.get('players').then((value)=>{
       this.players=value;
-      if(this.players==undefined || this.players.length==0){
+      if(this.players==undefined){
         this.playersDontExist=true;
       }else{
         this.playersDontExist=false;
@@ -50,7 +50,6 @@ export class AboutPage {
   }
 
   openPlayer(player){
-    console.log("Player from league play");
     console.log(player);
     let passParams={
       player:player
@@ -64,7 +63,7 @@ export class AboutPage {
 
   createPlayer(){
     let id={
-      player:-1
+      id:-1
     };
     let modal = this.modalCtrl.create(CreatePlayerPage,id);
     modal.onDidDismiss(()=>{

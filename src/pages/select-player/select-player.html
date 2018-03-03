@@ -24,19 +24,24 @@
       <h3>Display Name</h3>
     </ion-col>
   </ion-row>
-  <ion-item *ngFor="let player of players">
+  <ion-list *ngFor="let player of players">
      
-      <button  (click)="addPlayer(player)">
+      
           <ion-row>
+            <ion-col col-auto><ion-item><ion-checkbox checked="player.isPlaying"></ion-checkbox></ion-item></ion-col>
             <ion-col>
-              {{player.name}}
-            </ion-col>
-            <ion-col>
-              {{player.displayName}}
+              <button ion-item (click)="addPlayer(player)">
+                <ion-row>
+                    <ion-col>{{player.name}}</ion-col>
+                    <ion-col>{{player.displayName}}</ion-col>
+                </ion-row>
+
+              </button>
+              
             </ion-col>
           </ion-row>
-        </button>
-  </ion-item>
+      
+  </ion-list>
   
 
 </ion-content>
