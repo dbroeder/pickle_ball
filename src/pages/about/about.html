@@ -7,20 +7,20 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-row>
-    <ion-col>
-      <h4>Name</h4>
-    </ion-col>
-    <ion-col>
-      <h4>Display Name</h4>
-    </ion-col>
-    <ion-col>
-      <h4>Rating</h4>
-    </ion-col>
-  </ion-row>
-  <h6 *ngIf='playersDontExist'>No players exist at this time.</h6>
+    <ion-row >
+        <ion-col>
+          <h4>Name</h4>
+        </ion-col>
+        <ion-col>
+          <h4>Display Name</h4>
+        </ion-col>
+        <ion-col>
+          <h4>Rating</h4 >
+        </ion-col>
+    </ion-row>
+    <h6 *ngIf='playersDontExist'>No players exist at this time.</h6>
   <button ion-item *ngFor='let player of players' (click)='openPlayer(player)'>
-    <ion-row>
+    <ion-row >
       <ion-col>{{player.name}}</ion-col>
       <ion-col>{{player.displayName}}</ion-col>
       <ion-col>{{player.rating}}</ion-col>
@@ -28,5 +28,4 @@
   </button>
 
   <button ion-button (click)='createPlayer()'>Create Player</button>
-  <button *ngIf='!playersDontExist' ion-button (click)='selectPlayers()'>Play League Matches</button>
 </ion-content>

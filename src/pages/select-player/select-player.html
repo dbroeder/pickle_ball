@@ -15,28 +15,4 @@
 
 <ion-content padding>
 
-
-  <ion-row>
-    <ion-col>
-      <h3>Player Name</h3>
-    </ion-col>
-    <ion-col>
-      <h3>Display Name</h3>
-    </ion-col>
-  </ion-row>
-  <ion-item *ngFor="let player of players">
-     
-      <button  (click)="addPlayer(player)">
-          <ion-row>
-            <ion-col>
-              {{player.name}}
-            </ion-col>
-            <ion-col>
-              {{player.displayName}}
-            </ion-col>
-          </ion-row>
-        </button>
-  </ion-item>
-  
-
 </ion-content>
