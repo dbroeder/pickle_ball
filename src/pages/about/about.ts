@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ModalController} from 'ionic-angular';
 import {CreatePlayerPage} from '../create-player/create-player';
 import {PlayersProvider} from '../../providers/players/players';
+import {SelectPlayerPage} from '../select-player/select-player'
 
 @Component({
   selector: 'page-about',
@@ -11,7 +12,6 @@ export class AboutPage {
 
   playersDontExist=false;
   players;
-
 
   constructor(public navCtrl: NavController, 
     public modalCtrl: ModalController,
@@ -25,11 +25,20 @@ export class AboutPage {
     
   }
 
+  selectPlayers(){
+       let passParams={
+         players:this.players
+        }
+        let modal = this.modalCtrl.create(SelectPlayerPage,passParams);
+        modal.present();
+      }
+    
+
   getPlayers(){
     
     this.playerProv.get('players').then((value)=>{
       this.players=value;
-      if(this.players==undefined){
+      if(this.players==undefined||this.players.length ==0){
         this.playersDontExist=true;
       }else{
         this.playersDontExist=false;
@@ -41,9 +50,10 @@ export class AboutPage {
   }
 
   openPlayer(player){
+    console.log("Player from league play");
     console.log(player);
     let passParams={
-      id:player._id
+      player: player
     };
     let modal = this.modalCtrl.create(CreatePlayerPage,passParams);
     modal.onDidDismiss(()=>{
@@ -54,7 +64,7 @@ export class AboutPage {
 
   createPlayer(){
     let id={
-      id:-1
+      player:-1
     };
     let modal = this.modalCtrl.create(CreatePlayerPage,id);
     modal.onDidDismiss(()=>{
