@@ -24,7 +24,7 @@ export class RoundsPage {
   sbuttonColor2 = 'primary';
   rounds;
   error = false;
-  singlesWinner: Playa;
+  singlesWinner= new Playa(0);
   winners = [];
   competetiveRound = false;
   selectedButtons = [];
@@ -60,6 +60,7 @@ export class RoundsPage {
   }
 
   allHaveHadByes() {
+    //ensures all players have had a bye before repeating
     var allPlayed = true;
     for (var index = 0; index < this.picklePlayers.length; index++) {
       if (this.picklePlayers[index].playedBye === false) {
@@ -74,6 +75,7 @@ export class RoundsPage {
   }
 
   allHavePlayedSingles() {
+    //only used for doubles format. ensures 1 player doesn't get repeatedly stuck in the singles bracket
     var count = 0;
     for (var index = 0; index < this.picklePlayers.length; index++) {
       if (this.picklePlayers[index].playedSingles === false) {
@@ -88,8 +90,11 @@ export class RoundsPage {
   }
 
   singlesRounds() {
+    //Used for singles format matchups
+
     this.singlesMatches = [];
     this.selectedButtons = [];
+    //if even number then set up matches
     if (this.playerNumber % 2 == 0) {
       for (var index = 0; index < this.picklePlayers.length; index += 2) {
         this.selectedButtons.push(false);
@@ -97,6 +102,7 @@ export class RoundsPage {
       }
 
     }
+    //if odd number assisgns players a bye round
     else {
       this.allHaveHadByes();
       this.byeRound = true;
@@ -114,6 +120,7 @@ export class RoundsPage {
 
 
   matchups() {
+    //sets up matchups for each round
     if (this.singlesFormat) {
       this.singlesRounds();
     } else {
@@ -194,6 +201,7 @@ export class RoundsPage {
   }
 
   winnerWinnerDoubles(cnum, bnum, plyr1, plyr2, plyr3, plyr4) {
+    //handles when the button is pushed in doubles format
     if (this.doublesMatches[cnum - 1].buttonColor1 === 'primary' && this.doublesMatches[cnum - 1].buttonColor2 === 'primary') {
       if (bnum === 1) {
         this.doublesMatches[cnum - 1].buttonColor1 = 'secondary';
@@ -220,14 +228,29 @@ export class RoundsPage {
 
       }
       this.in = true;
-      this.winners.splice(this.getIndexOfId(plyr1));
-      this.winners.splice(this.getIndexOfId(plyr2));
+      this.getIndexOfId(plyr1,this.winners).then((val) => {
+        if (val != -1) {
+          this.winners.splice(val);
+          console.log("winners");
+          console.log(this.winners);
+        }
+      });
+      this.getIndexOfId(plyr2,this.winners).then((val) => {
+        if (val != -1) {
+          this.winners.splice(val);
+          console.log("the index of id = " + val);
+          console.log("winners");
+          console.log(this.winners);
+        }
+        
+      });
 
     }
 
   }
 
   winnerWinnerSingles(num, bnum, plyr1, plyr2) {
+    //handles when the singles button is pushed
     if (this.singlesFormat) {
       if (this.singlesMatches[num - 1].buttonColor1 === 'primary' && this.singlesMatches[num - 1].buttonColor2 === 'primary') {
         if (bnum === 1) {
@@ -257,11 +280,18 @@ export class RoundsPage {
         }
         this.in = true;
 
-//write asynchons code here for splice;
+        //write asynchons code here for splice;
 
-        this.winners.splice(this.getIndexOfId(plyr1));
-        console.log("winners");
-        console.log(this.winners);
+        this.getIndexOfId(plyr1,this.winners).then((val) => {
+          if(val!=-1){
+            this.winners.splice(val);
+            console.log("the index of id = " +val);
+            console.log("winners");
+            console.log(this.winners);
+          }
+         
+        });
+
 
       }
     } else {
@@ -293,17 +323,22 @@ export class RoundsPage {
 
   }
 
-  getIndexOfId(player) {
-    let id = -1;
-    for (let i = 0; i < this.picklePlayers.length; i++) {
-      if (player._id == this.picklePlayers[i]._id) {
-        id = i;
+  getIndexOfId(player,list): Promise<number> {
+    //gets the specific index of a player in an array
+
+    return new Promise<number>(resolve => {
+      let id = -1;
+      for (let i = 0; i < list.length; i++) {
+        if (player._id == list[i]._id) {
+          id = i;
+        }
       }
-    }
-    return id;
+      resolve(id)
+    });
   }
 
   competeButton() {
+    //handles when the competitive button is pressed
     if (this.competetiveRound == false) {
       let alert = this.alertCtrl.create({
         title: 'Continue?',
@@ -342,6 +377,7 @@ export class RoundsPage {
 
 
   competeShuff() {
+    //shuffles players based on win percentage
     if (this.buttonSelected()) {
       this.re_align_Players();
       this.rounds++;
@@ -442,6 +478,7 @@ export class RoundsPage {
   }
 
   reset() {
+    //handles when the quit button is pressed
     let alert = this.alertCtrl.create({
       title: 'Are you sure?',
       message: "Are you sure you want to quit this game? You will lose all your progress.",
@@ -466,6 +503,7 @@ export class RoundsPage {
   }
 
   randomList(num) {
+    //randomizes player list for random rounds
     let m = num - 1;
     for (var index = 0; index < num; index++) {
       let rn = Math.floor(Math.random() * m);
@@ -480,6 +518,7 @@ export class RoundsPage {
   }
 
   buttonSelected() {
+    //checks to see if a player matchup has been selected
     var bool = false;
     for (let val of this.selectedButtons) {
       if (val == true) {
@@ -494,6 +533,7 @@ export class RoundsPage {
 
 
   nextRound() {
+    //handles the next button 
     if (this.buttonSelected() === true && this.competetiveRound == false) {
       this.re_align_Players();
       this.rounds++;
@@ -603,6 +643,7 @@ export class RoundsPage {
   }
 
   addPlayer() {
+    //adds a player when someone shows up mid round
     if (this.buttonSelected() == true) {
       let alert = this.alertCtrl.create({
         title: 'Oops',
@@ -628,6 +669,7 @@ export class RoundsPage {
   }
 
   remove() {
+    //removes a player. is called when minus button is pushed
     if (this.buttonSelected() == true) {
       let alert = this.alertCtrl.create({
         title: 'Oops',
@@ -636,7 +678,14 @@ export class RoundsPage {
       });
       alert.present();
     } else {
-      let remove = this.modalCtrl.create(RemovePlayerPage, { totalPlayerNums: this.picklePlayers.length });
+
+      let greatest_id = 0;
+      for (let player of this.picklePlayers) {
+        if (player._id > greatest_id) {
+          greatest_id = player._id;
+        }
+      }
+      let remove = this.modalCtrl.create(RemovePlayerPage, { totalPlayerNums: greatest_id });
       remove.onDidDismiss(data => {
         var checkNums = data;
         if (checkNums !== undefined) {
@@ -669,11 +718,13 @@ export class RoundsPage {
   }
 
   refresh() {
+    //re-organizes matchups
     this.randomList(this.picklePlayers.length);
     this.matchups();
   }
 
   refreshButton() {
+    //called when refresh button is pressed
     if (this.buttonSelected() == true) {
       let alert = this.alertCtrl.create({
         title: 'Oops',
@@ -694,6 +745,7 @@ export class RoundsPage {
   }
 
   results() {
+    //called when results button is pressed
     if (this.rounds < 2) {
       let alert = this.alertCtrl.create({
         title: "Too Early",

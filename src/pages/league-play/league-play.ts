@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the LeaguePlayPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 
 @Component({
@@ -15,11 +9,23 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class LeaguePlayPage {
 
+  playingPlayers=[];
+  gameType;
+
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.playingPlayers=this.navParams.get("playingPlayers");
+    this.gameType=this.navParams.get('gameType');
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LeaguePlayPage');
+    
   }
+
+  roundRobin(){
+    
+  }
+
+
 
 }

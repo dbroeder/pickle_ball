@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, ViewController } from 'ionic-angular';
 import { PlayersProvider } from '../../providers/players/players';
-import { ModalController } from 'ionic-angular/components/modal/modal-controller';
+
 
 @Component({
   selector: 'page-create-player',
@@ -45,7 +45,6 @@ export class CreatePlayerPage {
 
     this.player = navParams.get('player');
     if (this.player != -1) {
-      this.oldPlayer = navParams.get('player');
       this.displayName = this.player.displayName;
       this.name = this.player.name;
       this.rating = this.player.rating;
@@ -53,14 +52,16 @@ export class CreatePlayerPage {
 
   }
 
-  getIndexOfId(player) {
-    let id = -1;
-    for (let i = 0; i < this.playerList.length; i++) {
-      if (player._id == this.playerList[i]._id) {
-        id = i;
+  getIndexOfId(player): Promise<number> {
+    return new Promise<number>(resolve => {
+      let id = -1;
+      for (let i = 0; i < this.playerList.length; i++) {
+        if (player._id == this.playerList[i]._id) {
+          id = i;
+        }
       }
-    }
-    return id;
+      resolve(id);
+    })
   }
 
   savePlayer() {
@@ -72,9 +73,12 @@ export class CreatePlayerPage {
     this.player.rating = this.rating;
     this.player.displayName = this.displayName;
     if (this.checkErrors(this.player.name, this.player.id, this.player.displayName, this.player._id)) {
-      this.playerList.splice(this.getIndexOfId(this.oldPlayer), 1, this.player);
-      this.playerProv.set('players', this.playerList);
-      this.viewCtrl.dismiss();
+      this.getIndexOfId(this.oldPlayer).then((val)=>{
+        this.playerList.splice(val,this.player,1);
+        this.playerProv.set('players', this.playerList);
+        this.viewCtrl.dismiss();
+      });
+
     }
 
 
@@ -90,7 +94,12 @@ export class CreatePlayerPage {
   }
 
   deletePlayer(){
-    this.playerList.splice(this.getIndexOfId(this.player));
+    this.getIndexOfId(this.player).then((val)=>{
+      this.playerList.splice(val,1);
+      this.playerProv.set('players', this.playerList);
+      this.viewCtrl.dismiss();
+    });
+    
   }
 
   checkErrors(name, num, dispName, id) {

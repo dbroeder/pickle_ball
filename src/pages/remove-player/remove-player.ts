@@ -17,15 +17,19 @@ export class RemovePlayerPage {
 
   playerNum:number;
   totalNumofPlayers:number;
+  greatestId;
 
   constructor(public platform: Platform, public alertCtrl: AlertController ,public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
     platform.registerBackButtonAction(()=>{
       this.viewCtrl.dismiss();
     })
+    this.totalNumofPlayers=this.navParams.get('totalPlayerNums');
+    
+
   }
 
   ionViewDidLoad() {
-    this.totalNumofPlayers=this.navParams.get('totalPlayerNums');
+    
     console.log('ionViewDidLoad RemovePlayerPage');
   }
 

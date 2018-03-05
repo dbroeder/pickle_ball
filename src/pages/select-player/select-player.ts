@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams,ViewController,ModalController } from 'ionic-angular';
+import { LeaguePlayPage } from '../league-play/league-play';
 
 
 
@@ -11,6 +12,7 @@ export class SelectPlayerPage {
 
   players;
   playingPlayers = [];
+  gameType;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl:ViewController,
     public modalCtrl: ModalController) {
@@ -53,9 +55,14 @@ export class SelectPlayerPage {
 
   startRounds(){
     let passParams={
-      playingPlayers:this.playingPlayers
+      playingPlayers:this.playingPlayers,
+      gameType: this.gameType
     }
-    let modal = this.modalCtrl.create
+    let modal = this.modalCtrl.create(LeaguePlayPage,passParams);
+    modal.onDidDismiss(()=>{
+      this.goBack();
+    })
+    modal.present();
 
   }
 
