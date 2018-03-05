@@ -220,8 +220,8 @@ export class RoundsPage {
 
       }
       this.in = true;
-      this.winners.splice(plyr1);
-      this.winners.splice(plyr2);
+      this.winners.splice(this.getIndexOfId(plyr1));
+      this.winners.splice(this.getIndexOfId(plyr2));
 
     }
 
@@ -239,6 +239,8 @@ export class RoundsPage {
           this.selectedButtons[num - 1] = true;
         }
         this.winners.push(plyr1);
+        console.log("winners");
+        console.log(this.winners);
         this.in = false;
 
 
@@ -254,7 +256,12 @@ export class RoundsPage {
 
         }
         this.in = true;
-        this.winners.splice(plyr1);
+
+//write asynchons code here for splice;
+
+        this.winners.splice(this.getIndexOfId(plyr1));
+        console.log("winners");
+        console.log(this.winners);
 
       }
     } else {
@@ -284,6 +291,16 @@ export class RoundsPage {
     }
 
 
+  }
+
+  getIndexOfId(player) {
+    let id = -1;
+    for (let i = 0; i < this.picklePlayers.length; i++) {
+      if (player._id == this.picklePlayers[i]._id) {
+        id = i;
+      }
+    }
+    return id;
   }
 
   competeButton() {
@@ -336,7 +353,7 @@ export class RoundsPage {
     this.picklePlayers.sort(function (a, b) {
       if ((((b.winPerc) - (a.winPerc)) == 0)) {
         if (((a.roundsPlayed) - (b.roundsPlayed)) == 0) {
-          return (a.id) - (b.id);
+          return (a._id) - (b._id);
         } else {
           return (b.roundsPlayed) - (a.roundsPlayed);
         }
@@ -452,7 +469,7 @@ export class RoundsPage {
     let m = num - 1;
     for (var index = 0; index < num; index++) {
       let rn = Math.floor(Math.random() * m);
-      while (this.picklePlayers[index].id === this.picklePlayers[rn].id) {
+      while (this.picklePlayers[index]._id === this.picklePlayers[rn]._id) {
         rn = Math.floor(Math.random() * m);
       }
       let i = this.picklePlayers[index];
@@ -509,12 +526,12 @@ export class RoundsPage {
     //gives wins to players 
     for (var index = 0; index < this.picklePlayers.length; index++) {
       for (var dex = 0; dex < this.winners.length; dex++) {
-        if (this.winners[dex].id == this.picklePlayers[index].id) {
+        if (this.winners[dex]._id == this.picklePlayers[index]._id) {
           this.picklePlayers[index].wins++;
         }
       }
-      if (this.singlesWinner !== undefined) {
-        if (this.singlesWinner.id == this.picklePlayers[index].id) {
+      if (this.singlesWinner !== undefined || this.singlesWinner._id != 0) {
+        if (this.singlesWinner._id == this.picklePlayers[index]._id) {
           this.picklePlayers[index].wins++;
         }
       }
@@ -527,7 +544,7 @@ export class RoundsPage {
           this.doublesMatches[idex].players[dd].roundsPlayed++;
         }
         for (var num = 0; num < this.picklePlayers.length; num++) {
-          if (this.picklePlayers[num].id == this.doublesMatches[idex].players[dd].id) {
+          if (this.picklePlayers[num]._id == this.doublesMatches[idex].players[dd]._id) {
             this.picklePlayers[num] = this.doublesMatches[idex].players[dd];
           }
         }
@@ -541,10 +558,10 @@ export class RoundsPage {
         this.singlesMatches[idex].player2.roundsPlayed++;
       }
       for (let num = 0; num < this.picklePlayers.length; num++) {
-        if (this.picklePlayers[num].id == this.singlesMatches[idex].player1.id) {
+        if (this.picklePlayers[num]._id == this.singlesMatches[idex].player1._id) {
           this.picklePlayers[num] = this.singlesMatches[idex].player1;
         }
-        if (this.picklePlayers[num].id == this.singlesMatches[idex].player2.id) {
+        if (this.picklePlayers[num]._id == this.singlesMatches[idex].player2._id) {
           this.picklePlayers[num] = this.singlesMatches[idex].player2;
         }
       }
@@ -552,14 +569,14 @@ export class RoundsPage {
     var count = 0;
     //matches up players in leftover singles from doubles rounds.
     if (this.singleGame !== undefined) {
-      while (this.singleGame.player1.id !== this.picklePlayers[count].id) {
+      while (this.singleGame.player1._id !== this.picklePlayers[count]._id) {
         count++;
       }
       this.picklePlayers[count] = this.singleGame.player1;
       this.picklePlayers[count].roundsPlayed++;
       this.picklePlayers[count].playedSingles = true;
       count = 0;
-      while (this.singleGame.player2.id !== this.picklePlayers[count].id) {
+      while (this.singleGame.player2._id !== this.picklePlayers[count]._id) {
         count++;
       }
       this.picklePlayers[count] = this.singleGame.player2;
@@ -569,7 +586,7 @@ export class RoundsPage {
     //sets bye round as having been played
     if (this.byeRound == true) {
       for (var bb = 0; bb < this.picklePlayers.length; bb++) {
-        if (this.byePlayer.id == this.picklePlayers[bb].id) {
+        if (this.byePlayer._id == this.picklePlayers[bb]._id) {
           this.picklePlayers[bb].playedBye = true;
         }
       }
@@ -596,8 +613,8 @@ export class RoundsPage {
     } else {
       var newPlayerNum = 0;
       for (var dex = 0; dex < this.picklePlayers.length; dex++) {
-        if (this.picklePlayers[dex].id > newPlayerNum) {
-          newPlayerNum = this.picklePlayers[dex].id;
+        if (this.picklePlayers[dex]._id > newPlayerNum) {
+          newPlayerNum = this.picklePlayers[dex]._id;
         }
       }
       this.picklePlayers.push(new Playa(newPlayerNum + 1));
@@ -626,7 +643,7 @@ export class RoundsPage {
 
           var num = -1;
           for (var dex = 0; dex < this.picklePlayers.length; dex++) {
-            if (this.picklePlayers[dex].id == checkNums) {
+            if (this.picklePlayers[dex]._id == checkNums) {
               num = dex;
             }
           }
@@ -698,7 +715,7 @@ export class RoundsPage {
         players: realSpots.sort(function (a, b) {
           if ((((b.winPerc) - (a.winPerc)) == 0)) {
             if (((a.roundsPlayed) - (b.roundsPlayed)) == 0) {
-              return (a.id) - (b.id);
+              return (a._id) - (b._id);
             } else {
               return (b.roundsPlayed) - (a.roundsPlayed);
             }
@@ -745,13 +762,13 @@ class SingleGame {
 class Playa {
   public wins = 0;
   public winPerc = 0;
-  public id: number;
+  public _id: number;
   public playedBye = false;
   public playedSingles = false;
   public roundsPlayed = 0;
 
   constructor(num) {
-    this.id = num;
+    this._id = num;
   }
 
 

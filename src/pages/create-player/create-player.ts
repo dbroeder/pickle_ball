@@ -89,6 +89,10 @@ export class CreatePlayerPage {
     this.viewCtrl.dismiss();
   }
 
+  deletePlayer(){
+    this.playerList.splice(this.getIndexOfId(this.player));
+  }
+
   checkErrors(name, num, dispName, id) {
     let unique = true;
     if (this.playerList != undefined) {
