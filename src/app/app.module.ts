@@ -12,10 +12,10 @@ import {ResultsPage } from '../pages/results/results';
 import {CreatePlayerPage} from '../pages/create-player/create-player';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import {Storage} from '@ionic/storage';
 import { IonicStorageModule } from '@ionic/storage';
 import { PlayersProvider } from '../providers/players/players';
 import {SelectPlayerPage} from '../pages/select-player/select-player';
+import {LeaguePlayPage} from '../pages/league-play/league-play';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,8 @@ import {SelectPlayerPage} from '../pages/select-player/select-player';
     RoundsPage,
     ResultsPage,
     CreatePlayerPage,
-    SelectPlayerPage
+    SelectPlayerPage,
+    LeaguePlayPage
   ],
   imports: [
     BrowserModule,
@@ -44,7 +45,8 @@ import {SelectPlayerPage} from '../pages/select-player/select-player';
     RoundsPage,
     ResultsPage,
     CreatePlayerPage,
-    SelectPlayerPage
+    SelectPlayerPage,
+    LeaguePlayPage
   ],
   providers: [ 
     StatusBar,
