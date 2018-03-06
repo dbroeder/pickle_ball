@@ -14,7 +14,6 @@ export class RoundsPage {
   playerNumber: number;
   picklePlayers = [];
   doublesMatches = [];
-  in = true;
   singlesRound = false;
   singleGame: SingleGame;
   byeRound = false;
@@ -36,12 +35,11 @@ export class RoundsPage {
   competitiveText = "Set a Competitive Round";
 
   constructor(public platform: Platform, public viewCtrl: ViewController, public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
-    let backPressed = platform.registerBackButtonAction(() => {
+    platform.registerBackButtonAction(() => {
       console.log("Rounds page back pressed");
       this.reset();
-      backPressed();
       
-    },1);
+    },10);
   }
 
   ionViewDidLoad() {
@@ -130,6 +128,7 @@ export class RoundsPage {
       this.doublesMatches = [];
       this.selectedButtons = [];
       this.singlesButton = false;
+      this.singleGame=undefined;
       if (this.picklePlayers.length % 4 === 0) {
         this.byeRound = false;
         this.singlesRound = false;
@@ -209,47 +208,68 @@ export class RoundsPage {
       if (bnum === 1) {
         this.doublesMatches[cnum - 1].buttonColor1 = 'secondary';
         this.selectedButtons[cnum - 1] = true;
+       
 
       } else if (bnum === 2) {
         this.doublesMatches[cnum - 1].buttonColor2 = 'secondary';
         this.selectedButtons[cnum - 1] = true;
+      
       }
       this.winners.push(plyr1);
       this.winners.push(plyr2);
-      this.in = false;
+      
 
 
 
     } else if (this.doublesMatches[cnum - 1].buttonColor1 === 'secondary' || this.doublesMatches[cnum - 1].buttonColor2 === 'secondary') {
-      if (bnum === 1) {
-        this.doublesMatches[cnum - 1].buttonColor1 = 'primary';
-        this.selectedButtons[cnum - 1] = false;
-
-      } else if (bnum === 2) {
+      if (bnum === 1 && this.doublesMatches[cnum - 1].buttonColor2 === 'secondary' ) {
+        console.log("scenario 1");
         this.doublesMatches[cnum - 1].buttonColor2 = 'primary';
-        this.selectedButtons[cnum - 1] = false;
-
-      }
-      this.in = true;
-      this.getIndexOfId(plyr1,this.winners).then((val) => {
-        if (val != -1) {
-          this.winners.splice(val);
-          console.log("winners");
-          console.log(this.winners);
-        }
-      });
-      this.getIndexOfId(plyr2,this.winners).then((val) => {
-        if (val != -1) {
-          this.winners.splice(val);
-          console.log("the index of id = " + val);
-          console.log("winners");
-          console.log(this.winners);
-        }
+        this.doublesMatches[cnum - 1].buttonColor1 = 'secondary';
+        this.removePlayerFromList(plyr3);
+        this.removePlayerFromList(plyr4);
+        this.winners.push(plyr1);
+        this.winners.push(plyr2);
         
-      });
+
+      } else if (bnum === 2&& this.doublesMatches[cnum - 1].buttonColor1 === 'secondary') {
+        console.log("scenario 2");
+        this.doublesMatches[cnum - 1].buttonColor1 = 'primary';
+        this.doublesMatches[cnum - 1].buttonColor2 = 'secondary';
+        this.removePlayerFromList(plyr3);
+        this.removePlayerFromList(plyr4);
+        this.winners.push(plyr1);
+        this.winners.push(plyr2);
+        
+
+      }else if(bnum==1 && this.doublesMatches[cnum - 1].buttonColor1 === 'secondary'){
+        console.log("scenario 3");
+        this.removePlayerFromList(plyr1);
+        this.removePlayerFromList(plyr2);
+        this.selectedButtons[cnum-1]=false;
+        this.doublesMatches[cnum - 1].buttonColor1 = 'primary';
+      }
+      else{
+        console.log("scenario 4");
+        this.removePlayerFromList(plyr1);
+        this.removePlayerFromList(plyr2);
+        this.selectedButtons[cnum-1]=false;
+        this.doublesMatches[cnum - 1].buttonColor2 = 'primary';
+      }
+      
+      
+      
 
     }
 
+  }
+
+  removePlayerFromList(player){
+    let val = this.getIndexOfId(player,this.winners);
+      if (val != -1) {
+        this.winners.splice(val,1);
+       
+      };
   }
 
   winnerWinnerSingles(num, bnum, plyr1, plyr2) {
@@ -267,58 +287,76 @@ export class RoundsPage {
         this.winners.push(plyr1);
         console.log("winners");
         console.log(this.winners);
-        this.in = false;
+       
 
 
 
       } else if (this.singlesMatches[num - 1].buttonColor1 === 'secondary' || this.singlesMatches[num - 1].buttonColor2 === 'secondary') {
-        if (bnum === 1) {
-          this.singlesMatches[num - 1].buttonColor1 = 'primary';
-          this.selectedButtons[num - 1] = false;
-
-        } else if (bnum === 2) {
+        if (bnum === 1 && this.singlesMatches[num - 1].buttonColor2 === 'secondary' ) {
+          console.log("scenario 1");
           this.singlesMatches[num - 1].buttonColor2 = 'primary';
-          this.selectedButtons[num - 1] = false;
-
+          this.singlesMatches[num - 1].buttonColor1 = 'secondary';
+          this.removePlayerFromList(plyr2);
+          this.winners.push(plyr1);
+          console.log("winners");
+          console.log(this.winners);
+  
+        } else if (bnum === 2&& this.singlesMatches[num - 1].buttonColor1 === 'secondary') {
+          console.log("scenario 2");
+          this.singlesMatches[num - 1].buttonColor1 = 'primary';
+          this.singlesMatches[num - 1].buttonColor2 = 'secondary';
+          this.removePlayerFromList(plyr2);
+          this.winners.push(plyr1);
+          console.log("winners");
+          console.log(this.winners)
+  
+        }else if(bnum==1 && this.singlesMatches[num - 1].buttonColor1 === 'secondary'){
+          console.log("scenario 3");
+          this.removePlayerFromList(plyr1);
+          this.selectedButtons[num-1]=false;
+          this.singlesMatches[num - 1].buttonColor1 = 'primary';
         }
-        this.in = true;
-
-        //write asynchons code here for splice;
-
-        this.getIndexOfId(plyr1,this.winners).then((val) => {
-          if(val!=-1){
-            this.winners.splice(val);
-            console.log("the index of id = " +val);
-            console.log("winners");
-            console.log(this.winners);
-          }
-         
-        });
+        else{
+          console.log("scenario 4");
+          this.removePlayerFromList(plyr1);
+          this.selectedButtons[num-1]=false;
+          this.singlesMatches[num - 1].buttonColor2 = 'primary';
+        }
 
 
       }
     } else {
       if (this.sbuttonColor1 === 'primary' && this.sbuttonColor2 === 'primary') {
-        if (num === 1) {
+        if (bnum === 1) {
           this.sbuttonColor1 = 'secondary';
-        } else if (num === 2) {
+        } else if (bnum === 2) {
           this.sbuttonColor2 = 'secondary';
         }
         this.singlesWinner = plyr1;
-        this.in = false;
+        
 
         this.singlesButton = true;
 
 
       } else if (this.sbuttonColor1 === 'secondary' || this.sbuttonColor2 === 'secondary') {
-        if (num === 1) {
-          this.sbuttonColor1 = 'primary';
-        } else if (num === 2) {
+        if (bnum === 1&&this.sbuttonColor2 === 'secondary') {
           this.sbuttonColor2 = 'primary';
+          this.sbuttonColor1="secondary";
+          this.singlesWinner=plyr1;
+        } else if (bnum === 2&&this.sbuttonColor1 === 'secondary') {
+          this.sbuttonColor1 = 'primary';
+          this.sbuttonColor2="secondary";
+          this.singlesWinner=plyr1;
+        }else if(bnum === 2&&this.sbuttonColor2 === 'secondary'){
+          this.singlesButton = false;
+          this.sbuttonColor2='primary';
+          this.singlesWinner = new Playa(0);
+        }else{
+          this.singlesButton = false;
+          this.sbuttonColor1='primary';
+          this.singlesWinner = new Playa(0);
         }
-        this.singlesButton = false;
-        this.in = true;
-        this.singlesWinner = new Playa(0);
+        
 
       }
     }
@@ -326,18 +364,16 @@ export class RoundsPage {
 
   }
 
-  getIndexOfId(player,list): Promise<number> {
+  getIndexOfId(player,list) {
     //gets the specific index of a player in an array
 
-    return new Promise<number>(resolve => {
       let id = -1;
       for (let i = 0; i < list.length; i++) {
         if (player._id == list[i]._id) {
           id = i;
         }
       }
-      resolve(id)
-    });
+      return id;
   }
 
   competeButton() {
@@ -411,6 +447,7 @@ export class RoundsPage {
         this.byeRound = false;
         this.singlesRound = false;
         for (var index = 0; index < this.picklePlayers.length; index += 4) {
+          this.selectedButtons.push(false);
           this.doublesMatches.push(new DoublesGame(this.picklePlayers[index], this.picklePlayers[index + 3], this.picklePlayers[index + 2], this.picklePlayers[index + 1], index / 4 + 1))
         }
       } else if (this.picklePlayers.length % 4 === 1) {
@@ -418,6 +455,7 @@ export class RoundsPage {
         this.singlesRound = false;
 
         for (var dex = 0; dex < this.picklePlayers.length - 1; dex += 4) {
+          this.selectedButtons.push(false);
           this.doublesMatches.push(new DoublesGame(this.picklePlayers[dex], this.picklePlayers[dex + 3], this.picklePlayers[dex + 2], this.picklePlayers[dex + 1], dex / 4 + 1))
         }
         this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
@@ -439,6 +477,7 @@ export class RoundsPage {
         this.byeRound = true;
         this.singlesRound = true;
         for (var index1 = 0; index1 < this.picklePlayers.length - 3; index1 += 4) {
+          this.selectedButtons.push(false);
           this.doublesMatches.push(new DoublesGame(this.picklePlayers[index1], this.picklePlayers[index1 + 3], this.picklePlayers[index1 + 2], this.picklePlayers[index1 + 1], index1 / 4 + 1))
         }
       }
@@ -453,11 +492,12 @@ export class RoundsPage {
         var court1 = Math.floor(this.picklePlayers.length / 4) + 1;
         this.singleGame = new SingleGame(player11, player22, court1);
         for (var index2 = 0; index2 < this.picklePlayers.length - 2; index2 += 4) {
+          this.selectedButtons.push(false);
           this.doublesMatches.push(new DoublesGame(this.picklePlayers[index2], this.picklePlayers[index2 + 3], this.picklePlayers[index2 + 2], this.picklePlayers[index2 + 1], index2 / 4 + 1))
         }
       }
 
-      this.in = true;
+      
     } else if (this.singlesFormat) {
       this.singlesMatches = [];
       this.selectedButtons = [];
@@ -465,6 +505,7 @@ export class RoundsPage {
         this.byeRound = false;
         for (let index = 0; index < this.picklePlayers.length; index += 2) {
           this.singlesMatches.push(new SingleGame(this.picklePlayers[index], this.picklePlayers[index + 1], index / 2 + 1));
+          this.selectedButtons.push(false);
         }
       }
       else if (this.picklePlayers.length % 2 == 1) {
@@ -472,6 +513,7 @@ export class RoundsPage {
         this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
         for (let index = 0; index < this.picklePlayers.length - 1; index += 2) {
           this.singlesMatches.push(new SingleGame(this.picklePlayers[index], this.picklePlayers[index + 1], index / 2 + 1));
+          this.selectedButtons.push(false);
         }
       }
     }
@@ -544,7 +586,7 @@ export class RoundsPage {
 
       this.refresh();
 
-      this.in = true;
+      
       this.winners = [];
       this.singlesWinner = new Playa(0);
     } else if (this.competetiveRound == true) {
@@ -580,6 +622,8 @@ export class RoundsPage {
       }
     }
     //adds rounds to players who participated (doubles)
+    console.log("Selected Buttons from re-align players");
+    console.log(this.selectedButtons);
     for (var idex = 0; idex < this.doublesMatches.length; idex++) {
 
       for (var dd = 0; dd < 4; dd++) {
@@ -616,14 +660,19 @@ export class RoundsPage {
         count++;
       }
       this.picklePlayers[count] = this.singleGame.player1;
-      this.picklePlayers[count].roundsPlayed++;
+      if(this.singlesWinner._id!=0){
+        this.picklePlayers[count].roundsPlayed++;
+      }
+      
       this.picklePlayers[count].playedSingles = true;
       count = 0;
       while (this.singleGame.player2._id !== this.picklePlayers[count]._id) {
         count++;
       }
       this.picklePlayers[count] = this.singleGame.player2;
-      this.picklePlayers[count].roundsPlayed++;
+      if(this.singlesWinner._id!=0){
+        this.picklePlayers[count].roundsPlayed++;
+      }
       this.picklePlayers[count].playedSingles = true;
     }
     //sets bye round as having been played

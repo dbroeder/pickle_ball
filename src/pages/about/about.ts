@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController} from 'ionic-angular';
+import { NavController, ModalController,Platform} from 'ionic-angular';
 import {CreatePlayerPage} from '../create-player/create-player';
 import {PlayersProvider} from '../../providers/players/players';
 import {SelectPlayerPage} from '../select-player/select-player'
@@ -15,8 +15,14 @@ export class AboutPage {
 
   constructor(public navCtrl: NavController, 
     public modalCtrl: ModalController,
-    public playerProv: PlayersProvider) {
-   
+    public playerProv: PlayersProvider,
+    public platform: Platform) {
+      platform.registerBackButtonAction(() => {
+        console.log("About page back pressed");
+        (navigator as any).Backbutton.goHome();
+        
+        
+      });
     
   }
 

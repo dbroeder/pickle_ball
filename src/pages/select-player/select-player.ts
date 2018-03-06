@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {  NavController, NavParams,ViewController,ModalController } from 'ionic-angular';
+import {  NavController, NavParams,ViewController,ModalController, Platform } from 'ionic-angular';
 import { LeaguePlayPage } from '../league-play/league-play';
 
 
@@ -15,8 +15,14 @@ export class SelectPlayerPage {
   gameType;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl:ViewController,
-    public modalCtrl: ModalController) {
+    public modalCtrl: ModalController, public platform:Platform) {
     this.players = navParams.get("players");
+    let backPressed = platform.registerBackButtonAction(() => {
+      console.log("Rounds page back pressed");
+      this.goBack();
+      backPressed();
+      
+    },9);
 
   }
 

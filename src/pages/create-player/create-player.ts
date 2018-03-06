@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController, ViewController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ViewController, Platform } from 'ionic-angular';
 import { PlayersProvider } from '../../providers/players/players';
 
 
@@ -27,7 +27,15 @@ export class CreatePlayerPage {
     public alertCtrl: AlertController,
     public navCtrl: NavController,
     public navParams: NavParams,
-    public playerProv: PlayersProvider) {
+    public playerProv: PlayersProvider,
+  public platform: Platform) {
+
+    let backPressed = platform.registerBackButtonAction(() => {
+      console.log("Rounds page back pressed");
+      this.goBack();
+      backPressed();
+      
+    },11);
 
     this.playerProv.get('players').then((val) => {
       this.playerList = val;

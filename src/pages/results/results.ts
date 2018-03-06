@@ -17,7 +17,7 @@ export class ResultsPage {
       this.navCtrl.pop();
       backPressed();
       
-    },2);
+    },11);
   }
 
   ionViewDidLoad() {

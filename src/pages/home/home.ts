@@ -21,7 +21,8 @@ export class HomePage{
    
     platform.registerBackButtonAction(()=>{
       console.log("home page back pressed");
-    },1)
+      (navigator as any).Backbutton.goHome();
+    })
 
   }
 

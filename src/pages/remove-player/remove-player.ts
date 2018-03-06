@@ -25,7 +25,7 @@ export class RemovePlayerPage {
       this.viewCtrl.dismiss();
       backPressed();
       
-    },3);
+    },11);
     this.totalNumofPlayers=this.navParams.get('totalPlayerNums');
     
 
