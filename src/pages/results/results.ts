@@ -12,9 +12,12 @@ export class ResultsPage {
   players;
   rounds;
   constructor(public platform: Platform,public navCtrl: NavController, public navParams: NavParams) {
-    platform.registerBackButtonAction(()=>{
+    let backPressed = platform.registerBackButtonAction(() => {
+      console.log("Rounds page back pressed");
       this.navCtrl.pop();
-    })
+      backPressed();
+      
+    },2);
   }
 
   ionViewDidLoad() {

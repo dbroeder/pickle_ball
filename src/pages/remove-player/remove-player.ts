@@ -20,9 +20,12 @@ export class RemovePlayerPage {
   greatestId;
 
   constructor(public platform: Platform, public alertCtrl: AlertController ,public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
-    platform.registerBackButtonAction(()=>{
+    let backPressed = platform.registerBackButtonAction(() => {
+      console.log("Rounds page back pressed");
       this.viewCtrl.dismiss();
-    })
+      backPressed();
+      
+    },3);
     this.totalNumofPlayers=this.navParams.get('totalPlayerNums');
     
 

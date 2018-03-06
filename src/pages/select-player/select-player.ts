@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,ViewController,ModalController } from 'ionic-angular';
+import {  NavController, NavParams,ViewController,ModalController } from 'ionic-angular';
 import { LeaguePlayPage } from '../league-play/league-play';
 
 

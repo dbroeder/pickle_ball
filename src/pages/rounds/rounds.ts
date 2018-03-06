@@ -36,9 +36,12 @@ export class RoundsPage {
   competitiveText = "Set a Competitive Round";
 
   constructor(public platform: Platform, public viewCtrl: ViewController, public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
-    this.platform.registerBackButtonAction(() => {
+    let backPressed = platform.registerBackButtonAction(() => {
+      console.log("Rounds page back pressed");
       this.reset();
-    })
+      backPressed();
+      
+    },1);
   }
 
   ionViewDidLoad() {

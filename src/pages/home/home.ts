@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController } from 'ionic-angular';
+import { NavController, ModalController, Platform } from 'ionic-angular';
 import {RoundsPage} from '../rounds/rounds';
 
 
@@ -16,8 +16,13 @@ export class HomePage{
 
  
 
-  constructor( public navCtrl: NavController, public modalCtrl: ModalController) {
+  constructor( public navCtrl: NavController, 
+    public modalCtrl: ModalController, public platform: Platform) {
    
+    platform.registerBackButtonAction(()=>{
+      console.log("home page back pressed");
+    },1)
+
   }
 
   ionViewDidLoad(){
