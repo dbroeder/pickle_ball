@@ -33,11 +33,41 @@ export class RoundsPage {
   doublesFormat = false;
   singlesFormat = false;
   competitiveText = "Set a Competitive Round";
+  alertPresented;
 
   constructor(public platform: Platform, public viewCtrl: ViewController, public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
+    this.alertPresented=false;
+    let alert = this.alertCtrl.create({
+      title: 'Are you sure?',
+      message: "Are you sure you want to quit this game? You will lose all your progress.",
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            let data: number;
+            this.viewCtrl.dismiss(data);
+          }
+        }
+      ]
+    });
     platform.registerBackButtonAction(() => {
       console.log("Rounds page back pressed");
-      this.reset();
+      if(this.alertPresented==false){
+         alert.present();
+         this.alertPresented=true;
+      }else{
+        alert.dismiss();
+        this.alertPresented=false;
+      }
+     
+      
+
       
     },10);
   }

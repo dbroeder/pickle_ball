@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController, Platform } from 'ionic-angular';
+import { NavController, ModalController, Platform,AlertController } from 'ionic-angular';
 import {RoundsPage} from '../rounds/rounds';
 
 
@@ -16,13 +16,14 @@ export class HomePage{
 
  
 
-  constructor( public navCtrl: NavController, 
-    public modalCtrl: ModalController, public platform: Platform) {
-   
-    platform.registerBackButtonAction(()=>{
-      console.log("home page back pressed");
-      (navigator as any).Backbutton.goHome();
-    })
+  constructor(public navCtrl: NavController,
+    public modalCtrl: ModalController, public platform: Platform, public alertCtrl: AlertController) {
+     this.platform.registerBackButtonAction(()=>{
+
+     });
+    
+
+
 
   }
 

@@ -19,7 +19,7 @@ export class AboutPage {
     public platform: Platform) {
       platform.registerBackButtonAction(() => {
         console.log("About page back pressed");
-        (navigator as any).Backbutton.goHome();
+        //(navigator as any).Backbutton.goHome();
         
         
       });
