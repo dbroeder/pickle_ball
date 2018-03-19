@@ -16,6 +16,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { PlayersProvider } from '../providers/players/players';
 import {SelectPlayerPage} from '../pages/select-player/select-player';
 import {LeaguePlayPage} from '../pages/league-play/league-play';
+import {CreateGroupsPage} from '../pages/create-groups/create-groups';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {LeaguePlayPage} from '../pages/league-play/league-play';
     ResultsPage,
     CreatePlayerPage,
     SelectPlayerPage,
-    LeaguePlayPage
+    LeaguePlayPage,
+    CreateGroupsPage
   ],
   imports: [
     BrowserModule,
@@ -46,7 +48,8 @@ import {LeaguePlayPage} from '../pages/league-play/league-play';
     ResultsPage,
     CreatePlayerPage,
     SelectPlayerPage,
-    LeaguePlayPage
+    LeaguePlayPage,
+    CreateGroupsPage
   ],
   providers: [ 
     StatusBar,

@@ -1,0 +1,62 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Create Group</ion-title>
+    <ion-buttons start>
+        <button ion-button icon-only (click)="goBack()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+      </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <h3 *ngIf="nameError" class="error">Group Name</h3>
+  <p *ngIf="nameError" class="error">{{errorMessage}}</p>
+  <h3 *ngIf="!nameError">Group Name</h3>
+  <ion-item>
+      <ion-input [(ngModel)]="groupName" type="text" class="input" placeholder="Group Name"></ion-input>
+  </ion-item>
+
+  <ion-row *ngIf="!playerError">
+      <ion-col>
+        <h3>Player Name</h3>
+      </ion-col>
+      <ion-col>
+        <h3>Display Name</h3>
+      </ion-col>
+    </ion-row>
+    <div *ngIf="playerError" class="error">
+        <ion-row >
+            <ion-col>
+              <h3>Player Name</h3>
+            </ion-col>
+            <ion-col>
+              <h3>Display Name</h3>
+            </ion-col>
+          </ion-row>
+          <p >Select players for group</p>
+    </div>
+    
+    <ion-list *ngFor="let player of players">
+  
+  
+      <ion-row>
+        <ion-col align-self: stretch>
+          <ion-item>
+            <ion-label>{{player.name}}</ion-label>
+            <ion-checkbox (ionChange)="addPlayer(player)" checked="player.isPlaying"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-label>{{player.displayName}}</ion-label>
+        </ion-col>
+      </ion-row>
+  
+    </ion-list>
+    <button ion-button (click)="saveGroup()">Save Group</button>
+
+</ion-content>

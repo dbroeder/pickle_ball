@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import {  NavController, NavParams,ViewController,ModalController, Platform } from 'ionic-angular';
 import { LeaguePlayPage } from '../league-play/league-play';
+import {PlayersProvider} from '../../providers/players/players';
+import {CreateGroupsPage} from '../create-groups/create-groups'
 
 
 
@@ -13,10 +15,13 @@ export class SelectPlayerPage {
   players;
   playingPlayers = [];
   gameType;
+  groupsExist;
+  groups=[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl:ViewController,
-    public modalCtrl: ModalController, public platform:Platform) {
+    public modalCtrl: ModalController, public platform:Platform, public playerProv:PlayersProvider) {
     this.players = navParams.get("players");
+    this.getGroups();
     let backPressed = platform.registerBackButtonAction(() => {
       console.log("Rounds page back pressed");
       this.goBack();
@@ -24,6 +29,26 @@ export class SelectPlayerPage {
       
     },9);
 
+  }
+
+  getGroups(){
+    this.playerProv.get("groups").then((val)=>{
+      this.groups=val;
+      if(this.groups==undefined){
+        this.groupsExist=false;
+      }
+      else{
+        this.groupsExist=true;
+      }
+    })
+  }
+
+  createGroup(){
+    let modal =this.modalCtrl.create(CreateGroupsPage);
+    modal.onDidDismiss(()=>{
+      this.getGroups();
+    })
+    modal.present();
   }
 
   ionViewDidLoad() {
