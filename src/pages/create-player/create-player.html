@@ -20,9 +20,9 @@
     <h5 *ngIf="nameDupError" class="display">Name</h5>
     <h5 *ngIf="!nameDupError" >Name</h5>
     <ion-input type="text" [(ngModel)]="name" ></ion-input>
-    <h5 *ngIf= '!dispNameError' >Three Character Display Name</h5>
-    <h5 *ngIf= 'dispNameError' class ='display'>Three Character Display Name</h5>
-    <ion-input type="text" placeholder="Three Characters" [(ngModel)]="displayName"></ion-input>
+    <h5 *ngIf= '!dispNameError' >Display Name</h5>
+    <h5 *ngIf= 'dispNameError' class ='display'>Display Name</h5>
+    <ion-input id='dispInputCP' type="text" placeholder="Max of 3 characters" [(ngModel)]="displayName" (keyup) = "checkDispLength(this)" (keydown) = "checkDispLength(this)"></ion-input>
     <h5 *ngIf="!ratingError">Player Rating</h5>
     <h5 *ngIf="ratingError" class="rating">Player Rating</h5>
     <ion-input type="number" placeholder="1.0-5.0" [(ngModel)]="rating" (keyup.enter)="createPlayer()"></ion-input>
@@ -34,9 +34,9 @@
     <h5 *ngIf="nameDupError" class="display">Name</h5>
     <h5 *ngIf="!nameDupError" >Name</h5>
     <ion-input type="text" [(ngModel)]="name" ></ion-input>
-    <h5 *ngIf= '!dispNameError' >Three Character Display Name</h5>
-    <h5 *ngIf= 'dispNameError' class ='display'>Three Character Display Name</h5>
-    <ion-input type="text" placeholder="Three Characters" [(ngModel)]="displayName"></ion-input>
+    <h5 *ngIf= '!dispNameError' >Display Name</h5>
+    <h5 *ngIf= 'dispNameError' class ='display'>Display Name</h5>
+    <ion-input id='dispInputEP' type="text" placeholder="Max of 3 characters" [(ngModel)]="displayName" (keydown) = "checkDispLength(this)" (keyup) = "checkDispLength(this)"></ion-input>
     <h5 *ngIf="!ratingError">Player Rating</h5>
     <h5 *ngIf="ratingError" class="rating">Player Rating</h5>
     <ion-input type="number" placeholder="1.0-5.0" [(ngModel)]="rating"></ion-input>

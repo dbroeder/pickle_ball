@@ -12,7 +12,7 @@ export class CreatePlayerPage {
   player;
   editPlayerBool = false;
   name;
-  displayName;
+  displayName: string;
   rating;
   playerList = [];
   totalPlayerNumber;
@@ -21,6 +21,7 @@ export class CreatePlayerPage {
   dispNameError = false;
   createPlayerBool = false;
   oldPlayer;
+  errorMessage='';
 
 
   constructor(public viewCtrl: ViewController,
@@ -110,6 +111,18 @@ export class CreatePlayerPage {
     
   }
 
+  checkDispLength(element){
+    console.log("checking length of "+this.displayName)
+    const max_length=3;
+    if (this.displayName) {
+      if (this.displayName.length > max_length) {
+        this.displayName = this.displayName.substr(0, max_length)
+      }
+
+    }
+
+  }
+
   checkErrors(name, num, dispName, id) {
     let unique = true;
     if (this.playerList != undefined) {
@@ -117,13 +130,26 @@ export class CreatePlayerPage {
         if (player.name == name && player._id != id) {
           this.nameDupError = true;
           unique = false;
+          this.errorMessage = "duplicate name";
         }
       }
-      if (dispName.length != 3) {
+      if(!name){
+        this.nameDupError = true;
+        unique = false;
+      }
+      if (dispName) {
+        if(dispName.length <= 3){
+          this.dispNameError = true;
+          unique = false;
+          this.errorMessage = 'needs at most 3 characters'
+        }
+          
+        
+      }else{
         this.dispNameError = true;
         unique = false;
       }
-      if (num > 5 || num < 1) {
+      if (num > 5 || num < 1|| !num) {
         this.ratingError = true;
         unique = false;
       }
@@ -147,11 +173,11 @@ export class CreatePlayerPage {
           roundsPlayed: 0,
           winPercentage: 0,
           isPlaying: false,
-          _id: this.totalPlayerNumber + 1
+          _id: Number(this.totalPlayerNumber) + 1
         }
         this.playerList.push(newPlayer);
         this.playerProv.set('players', this.playerList);
-        this.playerProv.set('playerLength', this.totalPlayerNumber + 1);
+        this.playerProv.set('playerLength', Number(this.totalPlayerNumber) + 1);
       } else {
         let newPlayer = {
           name: this.name,
@@ -167,7 +193,7 @@ export class CreatePlayerPage {
         console.log(newPlayer);
         this.playerList.push(newPlayer);
         this.playerProv.set('players', this.playerList);
-        this.playerProv.set('playerLength', '1');
+        this.playerProv.set('playerLength', 1);
 
       }
 

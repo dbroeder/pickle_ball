@@ -17,6 +17,7 @@ import { PlayersProvider } from '../providers/players/players';
 import {SelectPlayerPage} from '../pages/select-player/select-player';
 import {LeaguePlayPage} from '../pages/league-play/league-play';
 import {CreateGroupsPage} from '../pages/create-groups/create-groups';
+import {LongPressModule} from 'ionic-long-press';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {CreateGroupsPage} from '../pages/create-groups/create-groups';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    LongPressModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
