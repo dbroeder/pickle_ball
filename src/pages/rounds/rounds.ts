@@ -3,6 +3,7 @@ import { Platform, ViewController, AlertController, NavController, NavParams, Mo
 
 import { RemovePlayerPage } from '../remove-player/remove-player';
 import { ResultsPage } from '../results/results';
+import {DoublesMatchesProvider} from '../../providers/doubles-matches/doubles-matches';
 
 
 
@@ -35,7 +36,7 @@ export class RoundsPage {
   competitiveText = "Set a Competitive Round";
   alertPresented;
 
-  constructor(public platform: Platform, public viewCtrl: ViewController, public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
+  constructor(public doubleProv:DoublesMatchesProvider, public platform: Platform, public viewCtrl: ViewController, public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
     this.alertPresented=false;
     let alert = this.alertCtrl.create({
       title: 'Are you sure?',
@@ -164,7 +165,7 @@ export class RoundsPage {
         this.singlesRound = false;
         for (var index = 0; index < this.picklePlayers.length; index += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(new DoublesGame(this.picklePlayers[index], this.picklePlayers[index + 1], this.picklePlayers[index + 2], this.picklePlayers[index + 3], index / 4 + 1))
+          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index], this.picklePlayers[index + 1], this.picklePlayers[index + 2], this.picklePlayers[index + 3], index / 4 + 1))
         }
       } else if (this.picklePlayers.length % 4 === 1) {
         this.byeRound = true;
@@ -175,7 +176,7 @@ export class RoundsPage {
         }
         for (var dex = 0; dex < this.picklePlayers.length - 1; dex += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(new DoublesGame(this.picklePlayers[dex], this.picklePlayers[dex + 1], this.picklePlayers[dex + 2], this.picklePlayers[dex + 3], dex / 4 + 1))
+          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[dex], this.picklePlayers[dex + 1], this.picklePlayers[dex + 2], this.picklePlayers[dex + 3], dex / 4 + 1))
         }
         this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
       }
@@ -203,7 +204,7 @@ export class RoundsPage {
         this.singlesRound = true;
         for (var index1 = 0; index1 < this.picklePlayers.length - 3; index1 += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(new DoublesGame(this.picklePlayers[index1], this.picklePlayers[index1 + 1], this.picklePlayers[index1 + 2], this.picklePlayers[index1 + 3], index1 / 4 + 1))
+          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index1], this.picklePlayers[index1 + 1], this.picklePlayers[index1 + 2], this.picklePlayers[index1 + 3], index1 / 4 + 1))
         }
       }
       else {
@@ -225,7 +226,7 @@ export class RoundsPage {
         this.singleGame = new SingleGame(player11, player22, court1);
         for (var index2 = 0; index2 < this.picklePlayers.length - 2; index2 += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(new DoublesGame(this.picklePlayers[index2], this.picklePlayers[index2 + 1], this.picklePlayers[index2 + 2], this.picklePlayers[index2 + 3], index2 / 4 + 1))
+          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index2], this.picklePlayers[index2 + 1], this.picklePlayers[index2 + 2], this.picklePlayers[index2 + 3], index2 / 4 + 1))
         }
       }
     }
@@ -478,7 +479,7 @@ export class RoundsPage {
         this.singlesRound = false;
         for (var index = 0; index < this.picklePlayers.length; index += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(new DoublesGame(this.picklePlayers[index], this.picklePlayers[index + 3], this.picklePlayers[index + 2], this.picklePlayers[index + 1], index / 4 + 1))
+          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index], this.picklePlayers[index + 3], this.picklePlayers[index + 2], this.picklePlayers[index + 1], index / 4 + 1))
         }
       } else if (this.picklePlayers.length % 4 === 1) {
         this.byeRound = true;
@@ -486,7 +487,7 @@ export class RoundsPage {
 
         for (var dex = 0; dex < this.picklePlayers.length - 1; dex += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(new DoublesGame(this.picklePlayers[dex], this.picklePlayers[dex + 3], this.picklePlayers[dex + 2], this.picklePlayers[dex + 1], dex / 4 + 1))
+          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[dex], this.picklePlayers[dex + 3], this.picklePlayers[dex + 2], this.picklePlayers[dex + 1], dex / 4 + 1))
         }
         this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
 
@@ -508,7 +509,7 @@ export class RoundsPage {
         this.singlesRound = true;
         for (var index1 = 0; index1 < this.picklePlayers.length - 3; index1 += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(new DoublesGame(this.picklePlayers[index1], this.picklePlayers[index1 + 3], this.picklePlayers[index1 + 2], this.picklePlayers[index1 + 1], index1 / 4 + 1))
+          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index1], this.picklePlayers[index1 + 3], this.picklePlayers[index1 + 2], this.picklePlayers[index1 + 1], index1 / 4 + 1))
         }
       }
       else {
@@ -523,7 +524,7 @@ export class RoundsPage {
         this.singleGame = new SingleGame(player11, player22, court1);
         for (var index2 = 0; index2 < this.picklePlayers.length - 2; index2 += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(new DoublesGame(this.picklePlayers[index2], this.picklePlayers[index2 + 3], this.picklePlayers[index2 + 2], this.picklePlayers[index2 + 1], index2 / 4 + 1))
+          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index2], this.picklePlayers[index2 + 3], this.picklePlayers[index2 + 2], this.picklePlayers[index2 + 1], index2 / 4 + 1))
         }
       }
 
@@ -626,7 +627,8 @@ export class RoundsPage {
         buttons: ['Ok']
       });
       alert.present();
-    } else {
+    }else if(indy) 
+    else {
       let alert = this.alertCtrl.create({
         title: 'Select Winners',
         subTitle: 'Make sure at least one round has a selected winner.',
@@ -865,20 +867,31 @@ export class RoundsPage {
 
   }
 
-}
-class DoublesGame {
-  buttonColor1 = 'primary';
-  buttonColor2 = 'primary';
-  court = '';
-  players = []
-  constructor(player1, player2, player3, player4, num) {
-    this.court = num;
-    this.players.push(player1);
-    this.players.push(player2);
-    this.players.push(player3);
-    this.players.push(player4);
+  roundRobinMixup(match) {
+    if (match.sub_round == 2) {
+      let x = match.players[3];
+      let y = match.players[1];
+      match.players[3] = y;
+      match.players[1] = x;
+      match.sub_round++;
+      match.reshuffle = false;
+      this.doublesMatches.splice(this.doublesMatches.findIndex((element) => {
+        return element == match;
+      }), 1, match);
+    } else {
+      let x = match.players[1];
+      let y = match.players[2];
+      match.players[1] = y;
+      match.players[2] = x;
+      match.sub_round++;
+      this.doublesMatches.splice(this.doublesMatches.findIndex((element) => {
+        return element == match;
+      }), 1, match);
+    }
   }
+
 }
+
 
 class SingleGame {
   court: number;

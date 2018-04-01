@@ -14,7 +14,7 @@ export class SelectPlayerPage {
 
   players;
   playingPlayers = [];
-  gameType;
+  gameType="doubles";
   groupsExist;
   groups=[];
 
@@ -34,6 +34,8 @@ export class SelectPlayerPage {
   getGroups(){
     this.playerProv.get("groups").then((val)=>{
       this.groups=val;
+      console.log("List of Groups")
+      console.log(this.groups);
       if(this.groups==undefined){
         this.groupsExist=false;
       }
@@ -86,10 +88,10 @@ export class SelectPlayerPage {
 
   startRounds(){
     let passParams={
-      playingPlayers:this.playingPlayers,
+      playingPlayers: this.playingPlayers,
       gameType: this.gameType
     }
-    let modal = this.modalCtrl.create(LeaguePlayPage,passParams);
+    let modal = this.modalCtrl.create(LeaguePlayPage, passParams);
     modal.onDidDismiss(()=>{
       this.goBack();
     })

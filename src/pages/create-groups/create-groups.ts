@@ -11,10 +11,11 @@ export class CreateGroupsPage {
   players;
   groupPlayers=[];
   groupName;
-  groups;
+  groups=[];
   nameError=false;
   playerError=false;
   errorMessage;
+  group;
 
   constructor(public viewCtrl:ViewController,public navCtrl: NavController, public navParams: NavParams,public playerProv:PlayersProvider) {
     playerProv.get("players").then((val)=>{
@@ -26,16 +27,18 @@ export class CreateGroupsPage {
         console.log("undefined group")
         this.groups=[];
       }
-    })
+    });
+    this.group = this.navParams.get("group");
+    
   } 
 
   checkGroupName(){
     let nameExists=false;
-    for(let group of this.groups){
-      if(this.groupName==group.name){
+    this.groups.forEach((element)=>{
+      if(element.name==this.groupName){
         nameExists=true;
       }
-    }
+    })
     return nameExists;
   }
 

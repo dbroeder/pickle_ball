@@ -35,7 +35,7 @@
             <h5>Court #{{match.court}}</h5>
           </ion-col>
         </ion-row>
-        <ion-row class='b_row'>
+        <ion-row >
           <ion-col>
             <button ion-button [color]='match.buttonColor1' block (click)="winnerWinnerDoubles(match.court,1,match.players[0],match.players[1],match.players[2],match.players[3])">{{match.players[0]._id}} and {{match.players[1]._id}}</button>
           </ion-col>
@@ -47,6 +47,13 @@
             <button ion-button [color]='match.buttonColor2' block (click)="winnerWinnerDoubles(match.court,2,match.players[2],match.players[3],match.players[0],match.players[1])">{{match.players[2]._id}} and {{match.players[3]._id}}</button>
           </ion-col>
         </ion-row>
+        <ion-row class='b_row'>
+            <ion-col></ion-col>
+            <ion-col></ion-col>
+            <ion-col >
+              <button ion-button color='dark' (click)="roundRobinMixup(match)" [disabled]='!match.reshuffle'>Next Round</button>
+            </ion-col>
+          </ion-row>
       </ion-grid>
 
     </ion-list>

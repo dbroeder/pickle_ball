@@ -18,6 +18,10 @@ import {SelectPlayerPage} from '../pages/select-player/select-player';
 import {LeaguePlayPage} from '../pages/league-play/league-play';
 import {CreateGroupsPage} from '../pages/create-groups/create-groups';
 import {LongPressModule} from 'ionic-long-press';
+import { DoublesMatchesProvider } from '../providers/doubles-matches/doubles-matches';
+import { MatchesProvider } from '../providers/matches/matches';
+import { SinglesMatchesProvider } from '../providers/singles-matches/singles-matches';
+import { PlayaProvider } from '../providers/playa/playa';
 
 @NgModule({
   declarations: [
@@ -57,7 +61,11 @@ import {LongPressModule} from 'ionic-long-press';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    PlayersProvider
+    PlayersProvider,
+    DoublesMatchesProvider,
+    MatchesProvider,
+    SinglesMatchesProvider,
+    PlayaProvider
   ]
 })
 export class AppModule {}

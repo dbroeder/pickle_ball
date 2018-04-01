@@ -109,6 +109,11 @@
                 (click)="winnerWinnerSingles(2,singleGame.player2,singleGame.player1)">{{singleGame.player2._id}}</button>
               </ion-col>
             </ion-row>
+            <ion-row>
+              <ion-col>
+                <button ion-button color='dark'>Next Round</button>
+              </ion-col>
+            </ion-row>
           </ion-grid>
 
   </div>
@@ -117,5 +122,37 @@
 
   <button ion-button *ngIf='!competetiveRound' (click)="nextRound()" block>Next Random Round</button>
   <button ion-button (click)='reset()' block color='danger'>Quit Game</button>
+  <div class = 'box'>
+  <ion-grid >
+      <ion-row>
+        <ion-col>
+          <h5>Court #1</h5>
+        </ion-col>
+  
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <button ion-button block 
+          (click)="winnerWinnerSingles(1,singleGame.player1,singleGame.player2)">adb and 334</button>
+        </ion-col>
+        <ion-col col-auto>
+          <ion-label>Vs</ion-label>
+  
+        </ion-col>
+        <ion-col>
+          <button ion-button block 
+          (click)="winnerWinnerSingles(2,singleGame.player2,singleGame.player1)">123 and 456</button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col></ion-col>
+        <ion-col></ion-col>
+        <ion-col >
+          <button ion-button color='dark'>Next Round</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  
 
 </ion-content>
