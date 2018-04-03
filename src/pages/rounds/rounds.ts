@@ -627,8 +627,7 @@ export class RoundsPage {
         buttons: ['Ok']
       });
       alert.present();
-    }else if(indy) 
-    else {
+    }else {
       let alert = this.alertCtrl.create({
         title: 'Select Winners',
         subTitle: 'Make sure at least one round has a selected winner.',
@@ -868,26 +867,56 @@ export class RoundsPage {
   }
 
   roundRobinMixup(match) {
-    if (match.sub_round == 2) {
-      let x = match.players[3];
-      let y = match.players[1];
-      match.players[3] = y;
-      match.players[1] = x;
-      match.sub_round++;
-      match.reshuffle = false;
-      this.doublesMatches.splice(this.doublesMatches.findIndex((element) => {
+    if(this.selectedButtons[this.doublesMatches.findIndex((element)=>{
+      return element == match;
+    })]){
+      if (match.sub_round == 2) {
+        let x = match.players[3];
+        let y = match.players[1];
+        match.players[3] = y;
+        match.players[1] = x;
+        match.sub_round++;
+        match.reshuffle = false;
+        match.buttonColor1 = 'primary';
+        match.buttonColor2='primary';
+        this.doublesMatches.splice(this.doublesMatches.findIndex((element) => {
+          return element == match;
+        }), 1, match);
+      } else {
+        let x = match.players[1];
+        let y = match.players[2];
+        match.players[1] = y;
+        match.players[2] = x;
+        match.sub_round++;
+        match.buttonColor1 = 'primary';
+        match.buttonColor2='primary';
+        this.doublesMatches.splice(this.doublesMatches.findIndex((element) => {
+          return element == match;
+        }), 1, match);
+      }
+
+      this.re_align_Players();
+      this.selectedButtons[this.doublesMatches.findIndex((element)=>{
         return element == match;
-      }), 1, match);
-    } else {
-      let x = match.players[1];
-      let y = match.players[2];
-      match.players[1] = y;
-      match.players[2] = x;
-      match.sub_round++;
-      this.doublesMatches.splice(this.doublesMatches.findIndex((element) => {
-        return element == match;
-      }), 1, match);
+      })]=false;
+      this.winners.forEach((element)=>{
+        match.players.forEach((val)=>{
+          if(element == val){
+            this.winners.splice(this.winners.findIndex((v)=>{return v==element}))
+          }
+        })
+      })
+      console.log(this.winners);
+      
+    }else{
+      let alert = this.alertCtrl.create({
+        title:"No Winner Selected",
+        subTitle: "Select a winner to proceed",
+        buttons: ['ok']
+      })
+      alert.present();
     }
+
   }
 
 }
