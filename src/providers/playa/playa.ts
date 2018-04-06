@@ -23,7 +23,9 @@ export class PlayaProvider {
       roundsPlayed: 0,
       winPercentage: 0,
       isPlaying: false,
-      _id: id
+      _id: id,
+      playedBye: false,
+      playedSingles: false
     }
 
   }

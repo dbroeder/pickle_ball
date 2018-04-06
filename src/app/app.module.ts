@@ -22,6 +22,18 @@ import { DoublesMatchesProvider } from '../providers/doubles-matches/doubles-mat
 import { MatchesProvider } from '../providers/matches/matches';
 import { SinglesMatchesProvider } from '../providers/singles-matches/singles-matches';
 import { PlayaProvider } from '../providers/playa/playa';
+import { AngularFireModule } from 'angularfire2'; 
+import { AngularFirestoreModule, AngularFirestore } from 'angularfire2/firestore';
+import {AngularFireAuthModule} from 'angularfire2/auth';
+
+export const firebaseConfig = {
+  apiKey: "AIzaSyB43kdiULmydW4xKiJB-b0yqkpbkHPvXOA",
+  authDomain: "pickle-ball-server.firebaseapp.com",
+  databaseURL: "https://pickle-ball-server.firebaseio.com",
+  projectId: "pickle-ball-server",
+  storageBucket: "pickle-ball-server.appspot.com",
+  messagingSenderId: "686088552712"
+};
 
 @NgModule({
   declarations: [
@@ -41,7 +53,10 @@ import { PlayaProvider } from '../providers/playa/playa';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    LongPressModule
+    LongPressModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireAuthModule,
+    AngularFirestoreModule.enablePersistence()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -65,7 +80,8 @@ import { PlayaProvider } from '../providers/playa/playa';
     DoublesMatchesProvider,
     MatchesProvider,
     SinglesMatchesProvider,
-    PlayaProvider
+    PlayaProvider,
+    AngularFirestore
   ]
 })
 export class AppModule {}

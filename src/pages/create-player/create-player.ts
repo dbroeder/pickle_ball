@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, ViewController, Platform } from 'ionic-angular';
 import { PlayersProvider } from '../../providers/players/players';
+import {PlayaProvider} from '../../providers/playa/playa';
 
 
 @Component({
@@ -29,10 +30,10 @@ export class CreatePlayerPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public playerProv: PlayersProvider,
-  public platform: Platform) {
+  public platform: Platform,
+  public playaProv: PlayaProvider) {
 
     let backPressed = platform.registerBackButtonAction(() => {
-      console.log("Rounds page back pressed");
       this.goBack();
       backPressed();
       
@@ -41,7 +42,6 @@ export class CreatePlayerPage {
     this.playerProv.get('players').then((val) => {
       this.playerList = val;
       if (this.player == -1 || this.player == undefined) {
-        console.log('new player');
         this.createPlayerBool = true;
       } else {
         this.editPlayerBool = true;
@@ -56,8 +56,9 @@ export class CreatePlayerPage {
     if (this.player != -1) {
       this.displayName = this.player.displayName;
       this.name = this.player.name;
-      this.rating = this.player.rating;
+      this.rating = Number(this.player.rating);
     }
+    console.log(this.player.id)
 
   }
 
@@ -74,19 +75,12 @@ export class CreatePlayerPage {
   }
 
   savePlayer() {
-    console.log("Old Player Save Method");
-    console.log(this.oldPlayer);
-    console.log("Index of old player" + this.getIndexOfId(this.oldPlayer));
-    console.log(this.player);
     this.player.name = this.name;
     this.player.rating = this.rating;
     this.player.displayName = this.displayName;
-    if (this.checkErrors(this.player.name, this.player.id, this.player.displayName, this.player._id)) {
-      this.getIndexOfId(this.oldPlayer).then((val)=>{
-        this.playerList.splice(val,this.player,1);
-        this.playerProv.set('players', this.playerList);
-        this.viewCtrl.dismiss();
-      });
+    if (this.checkErrors(this.player.name, this.player.rating, this.player.displayName, this.player._id)) {
+      this.playerProv.updatePlayer(this.player);
+      this.viewCtrl.dismiss()
 
     }
 
@@ -103,16 +97,12 @@ export class CreatePlayerPage {
   }
 
   deletePlayer(){
-    this.getIndexOfId(this.player).then((val)=>{
-      this.playerList.splice(val,1);
-      this.playerProv.set('players', this.playerList);
-      this.viewCtrl.dismiss();
-    });
+    this.playerProv.deletePlayer(this.player);
+    this.viewCtrl.dismiss();
     
   }
 
   checkDispLength(element){
-    console.log("checking length of "+this.displayName)
     const max_length=3;
     if (this.displayName) {
       if (this.displayName.length > max_length) {
@@ -138,7 +128,7 @@ export class CreatePlayerPage {
         unique = false;
       }
       if (dispName) {
-        if(dispName.length <= 3){
+        if(dispName.length > 3){
           this.dispNameError = true;
           unique = false;
           this.errorMessage = 'needs at most 3 characters'
@@ -162,37 +152,12 @@ export class CreatePlayerPage {
   }
 
   createPlayer() {
-    console.log(this.totalPlayerNumber);
     if (this.checkErrors(this.name, this.rating, this.displayName, -1)) {
       if (this.totalPlayerNumber != undefined) {
-        let newPlayer = {
-          name: this.name,
-          displayName: this.displayName,
-          rating: this.rating,
-          wins: 0,
-          roundsPlayed: 0,
-          winPercentage: 0,
-          isPlaying: false,
-          _id: Number(this.totalPlayerNumber) + 1
-        }
-        this.playerList.push(newPlayer);
-        this.playerProv.set('players', this.playerList);
+        this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating),Number(this.totalPlayerNumber) + 1))
         this.playerProv.set('playerLength', Number(this.totalPlayerNumber) + 1);
       } else {
-        let newPlayer = {
-          name: this.name,
-          displayName: this.displayName,
-          rating: this.rating,
-          wins: 0,
-          roundsPlayed: 0,
-          winPercentage: 0,
-          isPlaying: false,
-          _id: 0
-        }
-        this.playerList = [];
-        console.log(newPlayer);
-        this.playerList.push(newPlayer);
-        this.playerProv.set('players', this.playerList);
+        this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating),0))
         this.playerProv.set('playerLength', 1);
 
       }

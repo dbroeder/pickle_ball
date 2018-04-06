@@ -2,7 +2,22 @@ import { Component } from '@angular/core';
 import { NavController, ModalController,Platform} from 'ionic-angular';
 import {CreatePlayerPage} from '../create-player/create-player';
 import {PlayersProvider} from '../../providers/players/players';
-import {SelectPlayerPage} from '../select-player/select-player'
+import {SelectPlayerPage} from '../select-player/select-player';
+import { Observable } from 'rxjs/Observable';
+
+interface Players {
+  name: string;
+  displayName: string;
+  rating: number;
+  wins: number;
+  roundsPlayed: number;
+  winPercentage: number;
+  isPlaying: boolean;
+  _id: number;
+  playedSingles:boolean;
+  playedBye: boolean;
+}
+
 
 @Component({
   selector: 'page-about',
@@ -10,61 +25,46 @@ import {SelectPlayerPage} from '../select-player/select-player'
 })
 export class AboutPage {
 
+  
+
   playersDontExist=false;
-  players;
+  players: Observable<Players[]>;
 
   constructor(public navCtrl: NavController, 
     public modalCtrl: ModalController,
     public playerProv: PlayersProvider,
     public platform: Platform) {
       platform.registerBackButtonAction(() => {
-        console.log("About page back pressed");
         //(navigator as any).Backbutton.goHome();
         
         
       });
     
   }
-
-  ionViewDidLoad(){
-    this.getPlayers();
-    
+  ionViewWillEnter(){
+    this.players = this.playerProv.getPlayers()
+    console.log(this.players);
   }
 
+
   selectPlayers(){
-       let passParams={
-         players:this.players
-        }
-        let modal = this.modalCtrl.create(SelectPlayerPage,passParams);
+    let players={
+      players: this.players
+    }
+    
+        let modal = this.modalCtrl.create(SelectPlayerPage,players);
         modal.present();
       }
     
 
-  getPlayers(){
-    
-    this.playerProv.get('players').then((value)=>{
-      this.players=value;
-      if(this.players==undefined||this.players.length ==0){
-        this.playersDontExist=true;
-      }else{
-        this.playersDontExist=false;
-      }
-      console.log(this.players)
-    });
-    
-    
-  }
+  
 
   openPlayer(player){
-    console.log("Player from league play");
-    console.log(player);
+
     let passParams={
       player: player
     };
     let modal = this.modalCtrl.create(CreatePlayerPage,passParams);
-    modal.onDidDismiss(()=>{
-      this.getPlayers();
-    });
     modal.present();
   }
 
@@ -73,9 +73,6 @@ export class AboutPage {
       player:-1
     };
     let modal = this.modalCtrl.create(CreatePlayerPage,id);
-    modal.onDidDismiss(()=>{
-      this.getPlayers();
-    });
     modal.present();
   }
 

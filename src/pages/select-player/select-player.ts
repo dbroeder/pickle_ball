@@ -2,9 +2,21 @@ import { Component } from '@angular/core';
 import {  NavController, NavParams,ViewController,ModalController, Platform } from 'ionic-angular';
 import { LeaguePlayPage } from '../league-play/league-play';
 import {PlayersProvider} from '../../providers/players/players';
-import {CreateGroupsPage} from '../create-groups/create-groups'
+import {CreateGroupsPage} from '../create-groups/create-groups';
+import {Observable} from 'rxjs/Observable';
 
-
+interface Players {
+  name: string;
+  displayName: string;
+  rating: number;
+  wins: number;
+  roundsPlayed: number;
+  winPercentage: number;
+  isPlaying: boolean;
+  _id: number;
+  playedSingles:boolean;
+  playedBye: boolean;
+}
 
 @Component({
   selector: 'page-select-player',
@@ -12,7 +24,7 @@ import {CreateGroupsPage} from '../create-groups/create-groups'
 })
 export class SelectPlayerPage {
 
-  players;
+  players: Observable<Players[]>;
   playingPlayers = [];
   gameType="doubles";
   groupsExist;
@@ -20,42 +32,31 @@ export class SelectPlayerPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl:ViewController,
     public modalCtrl: ModalController, public platform:Platform, public playerProv:PlayersProvider) {
-    this.players = navParams.get("players");
-    this.getGroups();
-    let backPressed = platform.registerBackButtonAction(() => {
-      console.log("Rounds page back pressed");
+    this.players = this.navParams.get('players');
+      let backPressed = platform.registerBackButtonAction(() => {
       this.goBack();
       backPressed();
       
     },9);
 
   }
-
-  getGroups(){
-    this.playerProv.get("groups").then((val)=>{
-      this.groups=val;
-      console.log("List of Groups")
-      console.log(this.groups);
-      if(this.groups==undefined){
-        this.groupsExist=false;
-      }
-      else{
-        this.groupsExist=true;
-      }
-    })
+  ionViewWillEnter(){
+    console.log('ionViewDidLoad SelectPlayerPage');
+    console.log(this.players);
+    this.players = this.playerProv.getPlayers();
   }
+
+
 
   createGroup(){
     let modal =this.modalCtrl.create(CreateGroupsPage);
     modal.onDidDismiss(()=>{
-      this.getGroups();
     })
     modal.present();
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SelectPlayerPage');
-    console.log(this.players);
+    
   }
 
   getIndexOfId(player) {
