@@ -25,6 +25,9 @@ import { PlayaProvider } from '../providers/playa/playa';
 import { AngularFireModule } from 'angularfire2'; 
 import { AngularFirestoreModule, AngularFirestore } from 'angularfire2/firestore';
 import {AngularFireAuthModule} from 'angularfire2/auth';
+import { AuthorizorProvider } from '../providers/authorizor/authorizor';
+import {LoginPage} from '../pages/login/login';
+import {RegisterPage} from '../pages/register/register';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyB43kdiULmydW4xKiJB-b0yqkpbkHPvXOA",
@@ -47,7 +50,9 @@ export const firebaseConfig = {
     CreatePlayerPage,
     SelectPlayerPage,
     LeaguePlayPage,
-    CreateGroupsPage
+    CreateGroupsPage,
+    LoginPage,
+    RegisterPage
   ],
   imports: [
     BrowserModule,
@@ -70,7 +75,9 @@ export const firebaseConfig = {
     CreatePlayerPage,
     SelectPlayerPage,
     LeaguePlayPage,
-    CreateGroupsPage
+    CreateGroupsPage,
+    LoginPage,
+    RegisterPage
   ],
   providers: [ 
     StatusBar,
@@ -81,7 +88,8 @@ export const firebaseConfig = {
     MatchesProvider,
     SinglesMatchesProvider,
     PlayaProvider,
-    AngularFirestore
+    AngularFirestore,
+    AuthorizorProvider
   ]
 })
 export class AppModule {}

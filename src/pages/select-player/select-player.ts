@@ -32,7 +32,6 @@ export class SelectPlayerPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl:ViewController,
     public modalCtrl: ModalController, public platform:Platform, public playerProv:PlayersProvider) {
-    this.players = this.navParams.get('players');
       let backPressed = platform.registerBackButtonAction(() => {
       this.goBack();
       backPressed();
@@ -41,9 +40,10 @@ export class SelectPlayerPage {
 
   }
   ionViewWillEnter(){
+    
+    this.players = this.playerProv.getPlayers(); 
     console.log('ionViewDidLoad SelectPlayerPage');
     console.log(this.players);
-    this.players = this.playerProv.getPlayers();
   }
 
 

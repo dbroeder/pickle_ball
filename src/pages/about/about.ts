@@ -42,19 +42,13 @@ export class AboutPage {
     
   }
   ionViewWillEnter(){
-    this.players = this.playerProv.getPlayers()
-    console.log(this.players);
+    this.players = this.playerProv.getPlayers();
   }
 
 
   selectPlayers(){
-    let players={
-      players: this.players
-    }
-    
-        let modal = this.modalCtrl.create(SelectPlayerPage,players);
-        modal.present();
-      }
+    this.navCtrl.push(SelectPlayerPage);
+  }
     
 
   
