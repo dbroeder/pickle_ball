@@ -14,6 +14,10 @@ export class AuthorizorProvider {
 
   }
 
+  getCurrentUser(){
+    return this.afAuth.auth.currentUser;
+  }
+
   loginUser(newEmail: string, newPassword: string): Promise<any> {
     
     return this.afAuth.auth.signInWithEmailAndPassword(newEmail, newPassword);

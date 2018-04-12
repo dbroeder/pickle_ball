@@ -154,10 +154,10 @@ export class CreatePlayerPage {
   createPlayer() {
     if (this.checkErrors(this.name, this.rating, this.displayName, -1)) {
       if (this.totalPlayerNumber != undefined) {
-        this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating),Number(this.totalPlayerNumber) + 1))
+        this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating)))
         this.playerProv.set('playerLength', Number(this.totalPlayerNumber) + 1);
       } else {
-        this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating),0))
+        this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating)))
         this.playerProv.set('playerLength', 1);
 
       }

@@ -14,7 +14,7 @@ export class PlayaProvider {
   constructor() {
   }
 
-  createPlayaByName(name,displayName,rating,id){
+  createPlayaByName(name,displayName,rating){
     return {
       name: name,
       displayName: displayName,
@@ -23,7 +23,6 @@ export class PlayaProvider {
       roundsPlayed: 0,
       winPercentage: 0,
       isPlaying: false,
-      _id: id,
       playedBye: false,
       playedSingles: false
     }

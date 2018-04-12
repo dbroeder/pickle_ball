@@ -28,6 +28,7 @@ import {AngularFireAuthModule} from 'angularfire2/auth';
 import { AuthorizorProvider } from '../providers/authorizor/authorizor';
 import {LoginPage} from '../pages/login/login';
 import {RegisterPage} from '../pages/register/register';
+import {LogoutPage} from '../pages/logout/logout'
 
 export const firebaseConfig = {
   apiKey: "AIzaSyB43kdiULmydW4xKiJB-b0yqkpbkHPvXOA",
@@ -52,7 +53,8 @@ export const firebaseConfig = {
     LeaguePlayPage,
     CreateGroupsPage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    LogoutPage
   ],
   imports: [
     BrowserModule,
@@ -77,7 +79,8 @@ export const firebaseConfig = {
     LeaguePlayPage,
     CreateGroupsPage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    LogoutPage
   ],
   providers: [ 
     StatusBar,

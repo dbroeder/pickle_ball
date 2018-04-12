@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Storage} from '@ionic/storage';
-import {AngularFirestore,AngularFirestoreCollection, AngularFirestoreDocument} from 'angularfire2/firestore'
+import {AngularFirestore,AngularFirestoreCollection} from 'angularfire2/firestore'
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {AuthorizorProvider} from '../authorizor/authorizor'
 
 
 interface Players {
@@ -13,20 +14,23 @@ interface Players {
   roundsPlayed: number;
   winPercentage: number;
   isPlaying: boolean;
-  _id: number;
+  userId:string;
   playedSingles:boolean;
   playedBye: boolean;
+  
 }
 
 export interface Item { name: string; }
 
 @Injectable()
 export class PlayersProvider {
-
+  user;
   playerCollection: AngularFirestoreCollection<Players>;
   players: Observable<Players[]>;
-  constructor( public storage: Storage, private afs: AngularFirestore) {
-    this.playerCollection = this.afs.collection('players');
+  constructor( public storage: Storage, private afs: AngularFirestore,public auth:AuthorizorProvider) {
+    this.user=auth.getCurrentUser(); 
+    
+      this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players');
     this.players = this.playerCollection.snapshotChanges().map(actions=>{
       return actions.map(a=>{
         let data = a.payload.doc.data() as Players;
@@ -34,8 +38,23 @@ export class PlayersProvider {
         return  {$id,...data};
       })
     })
+
+    
     console.log("Firebase players");
     console.log(this.players);
+  }
+
+  setUser(){
+
+  }
+  
+  createUser(){
+    this.afs.collection('users').doc(`user${this.user.uid}`).set({
+      name:this.user.email
+    }).then(()=>{
+    }).catch((e)=>{
+      console.error(e);
+    })
   }
 
   getPlayers(){
@@ -51,7 +70,7 @@ export class PlayersProvider {
       roundsPlayed: player.roundsPlayed,
       winPercentage: player.winPercentage,
       isPlaying: player.isPlaying,
-      _id: player._id,
+      userId: this.user.uid,
       playedSingles:player.playedSingles,
       playedBye: player.playedBye
     }).then(result => {
@@ -70,7 +89,6 @@ export class PlayersProvider {
       roundsPlayed: player.roundsPlayed,
       winPercentage: player.winPercentage,
       isPlaying: player.isPlaying,
-      _id: player._id,
       playedSingles:player.playedSingles,
       playedBye: player.playedBye
     }).then(()=>{

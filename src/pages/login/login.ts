@@ -23,12 +23,19 @@ export class LoginPage {
     console.log('ionViewDidLoad LoginPage');
   }
 
+  recoverPassword(){
+    
+  }
+
   login(){
     console.log(this.username +' and '+this.password)
-    this.auth.loginUser(this.username,this.password).then(()=>{
+    this.auth.loginUser(this.username,this.password).then((result)=>{
+      console.log(this.auth.getCurrentUser())
       this.navCtrl.setRoot(TabsPage);
     }).catch((e)=>{
       console.error(e);
+      this.usernameColor='red';
+  this.passwordColor='red';
     })
     
   }

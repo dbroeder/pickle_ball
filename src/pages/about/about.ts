@@ -13,7 +13,7 @@ interface Players {
   roundsPlayed: number;
   winPercentage: number;
   isPlaying: boolean;
-  _id: number;
+  userId: string;
   playedSingles:boolean;
   playedBye: boolean;
 }
