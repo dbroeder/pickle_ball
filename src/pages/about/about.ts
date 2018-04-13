@@ -46,7 +46,7 @@ export class AboutPage {
   }
 
 
-  selectPlayers(){
+  selectPlayers(event){
     this.navCtrl.push(SelectPlayerPage);
   }
     

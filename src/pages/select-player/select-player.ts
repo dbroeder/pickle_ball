@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import {  NavController, NavParams,ViewController,ModalController, Platform } from 'ionic-angular';
 import { LeaguePlayPage } from '../league-play/league-play';
 import {PlayersProvider} from '../../providers/players/players';
@@ -13,7 +13,7 @@ interface Players {
   roundsPlayed: number;
   winPercentage: number;
   isPlaying: boolean;
-  _id: number;
+  userId: string;
   playedSingles:boolean;
   playedBye: boolean;
 }
@@ -24,16 +24,15 @@ interface Players {
 })
 export class SelectPlayerPage {
 
-  players: Observable<Players[]>;
+  players$: Observable<Players[]>;
   playingPlayers = [];
   gameType="doubles";
   groupsExist;
   groups=[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl:ViewController,
-    public modalCtrl: ModalController, public platform:Platform, public playerProv:PlayersProvider) {
+    public modalCtrl: ModalController, public platform:Platform, public playerProv:PlayersProvider,public zone: NgZone) {
       let backPressed = platform.registerBackButtonAction(() => {
-      this.goBack();
       backPressed();
       
     },9);
@@ -41,9 +40,7 @@ export class SelectPlayerPage {
   }
   ionViewWillEnter(){
     
-    this.players = this.playerProv.getPlayers(); 
-    console.log('ionViewDidLoad SelectPlayerPage');
-    console.log(this.players);
+    
   }
 
 
@@ -56,7 +53,11 @@ export class SelectPlayerPage {
   }
 
   ionViewDidLoad() {
-    
+    this.zone.run(()=>{
+      this.players$ = this.playerProv.getPlayers(); 
+      console.log('ionViewDidLoad SelectPlayerPage');
+      console.log(this.players$);
+    })
   }
 
   getIndexOfId(player) {
@@ -69,9 +70,7 @@ export class SelectPlayerPage {
     return id;
   }
 
-  goBack(){
-    this.viewCtrl.dismiss();
-  }
+  
 
   addPlayer(player) {
     player.isPlaying = true;
@@ -93,9 +92,6 @@ export class SelectPlayerPage {
       gameType: this.gameType
     }
     let modal = this.modalCtrl.create(LeaguePlayPage, passParams);
-    modal.onDidDismiss(()=>{
-      this.goBack();
-    })
     modal.present();
 
   }

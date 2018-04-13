@@ -41,7 +41,7 @@
           <p >Select players for group</p>
     </div>
     
-    <ion-list *ngFor="let player of players">
+    <ion-list *ngFor="let player of players | async">
   
   
       <ion-row>

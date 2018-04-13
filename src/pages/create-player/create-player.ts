@@ -79,7 +79,7 @@ export class CreatePlayerPage {
     this.player.rating = this.rating;
     this.player.displayName = this.displayName;
     if (this.checkErrors(this.player.name, this.player.rating, this.player.displayName, this.player._id)) {
-      this.playerProv.updatePlayer(this.player);
+      this.playerProv.updatePlayer(this.player.$id,{name:this.name,rating:this.rating,displayName:this.displayName});
       this.viewCtrl.dismiss()
 
     }

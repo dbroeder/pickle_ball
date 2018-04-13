@@ -24,7 +24,9 @@ export class PlayaProvider {
       winPercentage: 0,
       isPlaying: false,
       playedBye: false,
-      playedSingles: false
+      playedSingles: false,
+      groups:[],
+      currentGame:''
     }
 
   }

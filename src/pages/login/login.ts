@@ -12,8 +12,8 @@ import {TabsPage} from '../../pages/tabs/tabs';
   templateUrl: 'login.html',
 })
 export class LoginPage {
-  username='';
-  password='';
+  username='djbroeder@cox.net';
+  password='111111';
   usernameColor='black';
   passwordColor='black';
   constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthorizorProvider) {

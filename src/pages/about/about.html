@@ -20,16 +20,17 @@
         </ion-col>
     </ion-row>
     <h6 *ngIf='playersDontExist'>No players exist at this time.</h6>
-  <button ion-item *ngFor='let player of players | async' (click)='openPlayer(player)'>
-    <ion-row >
-      <ion-col>{{player.name}}</ion-col>
-      <ion-col>{{player.rating}}</ion-col>
-      <ion-col>{{player.winPercentage}}%</ion-col> 
-    </ion-row>
-  </button>
+    <button ion-item *ngFor='let player of players | async' (click)='openPlayer(player)'>
+      <ion-row >
+        <ion-col>{{player.name}}</ion-col>
+        <ion-col>{{player.rating}}</ion-col>
+        <ion-col>{{player.winPercentage}}%</ion-col> 
+      </ion-row>
+    </button>
+
 
   <button ion-button (click)='createPlayer()'>Create Player</button>
-  <button *ngIf='!playersDontExist' ion-button (click)='selectPlayers()'>Play League Matches</button>
+  <button *ngIf='!playersDontExist' ion-button (click)='selectPlayers($event)'>Play League Matches</button>
 
 
 </ion-content>

@@ -3,6 +3,7 @@ import {Storage} from '@ionic/storage';
 import {AngularFirestore,AngularFirestoreCollection} from 'angularfire2/firestore'
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/share';
 import {AuthorizorProvider} from '../authorizor/authorizor'
 
 
@@ -17,6 +18,9 @@ interface Players {
   userId:string;
   playedSingles:boolean;
   playedBye: boolean;
+  groups: Array<any>;
+  currentGame:string;
+
   
 }
 
@@ -30,14 +34,7 @@ export class PlayersProvider {
   constructor( public storage: Storage, private afs: AngularFirestore,public auth:AuthorizorProvider) {
     this.user=auth.getCurrentUser(); 
     
-      this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players');
-    this.players = this.playerCollection.snapshotChanges().map(actions=>{
-      return actions.map(a=>{
-        let data = a.payload.doc.data() as Players;
-        let $id = a.payload.doc.id;
-        return  {$id,...data};
-      })
-    })
+      this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players'); 
 
     
     console.log("Firebase players");
@@ -47,10 +44,21 @@ export class PlayersProvider {
   setUser(){
 
   }
+
+  createGame(name){
+    this.afs.doc(`users/user${this.user.uid}`).update({
+      groups: name.push(name)
+    })
+  }
+
+  getGroups(){
+    return this.afs.doc(`users/user${this.user.uid}`).snapshotChanges()
+  }
   
   createUser(){
     this.afs.collection('users').doc(`user${this.user.uid}`).set({
-      name:this.user.email
+      name:this.user.email,
+      groups:[]
     }).then(()=>{
     }).catch((e)=>{
       console.error(e);
@@ -58,7 +66,19 @@ export class PlayersProvider {
   }
 
   getPlayers(){
-    return this.players;
+    return this.playerCollection.snapshotChanges().map(actions=>{
+      return actions.map(a=>{
+        let data = a.payload.doc.data() as Players;
+        let $id = a.payload.doc.id;
+        return  {$id,...data};
+      })
+    })
+  }
+
+  getRoundPlayers(round:string){
+    return this.afs.doc(`users/user${this.user.uid}`).collection('players',(ref) =>{
+      return ref.where('currentGame','==',round)
+    }).snapshotChanges();
   }
 
   addPlayer(player){
@@ -72,7 +92,9 @@ export class PlayersProvider {
       isPlaying: player.isPlaying,
       userId: this.user.uid,
       playedSingles:player.playedSingles,
-      playedBye: player.playedBye
+      playedBye: player.playedBye,
+      groups:[],
+      currentGame:''
     }).then(result => {
       console.log("Document added with id >>> ", result.id);
     }).catch(error=>{
@@ -80,18 +102,12 @@ export class PlayersProvider {
     })
   }
 
-  updatePlayer(player){
-    this.playerCollection.doc(player.$id).update({
-      name: player.name,
-      displayName: player.displayName,
-      rating: player.rating,
-      wins: player.wins,
-      roundsPlayed: player.roundsPlayed,
-      winPercentage: player.winPercentage,
-      isPlaying: player.isPlaying,
-      playedSingles:player.playedSingles,
-      playedBye: player.playedBye
-    }).then(()=>{
+  updatePlayer($id,updateProperty){
+    console.log(updateProperty)
+    this.playerCollection.doc($id).update(
+      
+      updateProperty 
+    ).then(()=>{
       console.log("Document updated successfully");
     }).catch(error=>{
       console.error("Error updating document: ", error);
