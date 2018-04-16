@@ -41,10 +41,6 @@ export class PlayersProvider {
     console.log(this.players);
   }
 
-  setUser(){
-
-  }
-
   createGame(name){
     this.afs.doc(`users/user${this.user.uid}`).update({
       groups: name.push(name)
