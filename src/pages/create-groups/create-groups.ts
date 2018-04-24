@@ -109,13 +109,20 @@ export class CreateGroupsPage {
   }
 
   addPlayer(player){
+    console.log(this.groupPlayers)
     player.isPlaying = true;
-    let id=this.getIndexOfId(player)
-    if(id==-1){
-      this.groupPlayers.push(player);
+    if(this.groupPlayers.some((element)=>{
+      return element.$id==player.$id;
+    })){
+      this.groupPlayers.splice(this.groupPlayers.indexOf((element)=>{
+        if(element.$id==player.$id){
+          return player.$id;
+        }
+      }));
+      
     }
     else{
-      this.groupPlayers.splice(id);
+      this.groupPlayers.push(player);
     }
   }
 

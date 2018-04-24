@@ -19,7 +19,7 @@ interface Players {
   playedSingles:boolean;
   playedBye: boolean;
   groups: Array<any>;
-  currentGame:string;
+  currentGame:string; 
 
   
 }
@@ -65,12 +65,14 @@ export class PlayersProvider {
     })
   }
 
-  getPlayers(){
+  getPlayers(filterProperty?, filterParam?){
     return this.playerCollection.snapshotChanges().map(actions=>{
       return actions.map(a=>{
         let data = a.payload.doc.data() as Players;
         let $id = a.payload.doc.id;
         return  {$id,...data};
+      }).filter((item)=>{
+        return item[filterProperty]==filterParam;
       })
     })
   }

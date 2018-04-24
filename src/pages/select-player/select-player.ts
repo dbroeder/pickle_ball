@@ -25,6 +25,7 @@ interface Players {
 export class SelectPlayerPage {
 
   players$: Observable<Players[]>;
+  filteredList$;
   playingPlayers = [];
   gameType="doubles";
   groupsExist;
@@ -36,13 +37,21 @@ export class SelectPlayerPage {
       backPressed();
       
     },9);
-
+    
   }
   ionViewWillEnter(){
     
     
   }
 
+  filterPlayers(filterParam){
+    return this.players$.map((players)=>{
+      players.filter((player)=>{
+        return player.isPlaying==filterParam;
+      })
+    })
+
+  }
 
 
   createGroup(){
@@ -54,9 +63,12 @@ export class SelectPlayerPage {
 
   ionViewDidLoad() {
     this.zone.run(()=>{
-      this.players$ = this.playerProv.getPlayers(); 
+      this.players$ = this.playerProv.getPlayers('isPlaying',true); 
       console.log('ionViewDidLoad SelectPlayerPage');
-      console.log(this.players$);
+      //console.log(this.players$);
+      //this.filteredList$=this.filterPlayers(true);
+      console.log(this.filteredList$)
+    
     })
   }
 
