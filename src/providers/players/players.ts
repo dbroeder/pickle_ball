@@ -100,7 +100,7 @@ export class PlayersProvider {
     })
   }
 
-  updatePlayer($id,updateProperty){
+  updatePlayer($id,updateProperty:object){
     console.log(updateProperty)
     this.playerCollection.doc($id).update(
       

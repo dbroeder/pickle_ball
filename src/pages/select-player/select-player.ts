@@ -25,6 +25,8 @@ interface Players {
 export class SelectPlayerPage {
 
   players$: Observable<Players[]>;
+  playersPlaying$: Observable<Players[]>;
+  playersNotPlaying$: Observable<Players[]>;
   filteredList$;
   playingPlayers = [];
   gameType="doubles";
@@ -63,7 +65,8 @@ export class SelectPlayerPage {
 
   ionViewDidLoad() {
     this.zone.run(()=>{
-      this.players$ = this.playerProv.getPlayers('isPlaying',true); 
+      this.playersPlaying$ = this.playerProv.getPlayers('isPlaying',true); 
+      this.playersNotPlaying$ = this.playerProv.getPlayers('isPlaying',false)
       console.log('ionViewDidLoad SelectPlayerPage');
       //console.log(this.players$);
       //this.filteredList$=this.filterPlayers(true);
@@ -85,6 +88,15 @@ export class SelectPlayerPage {
   
 
   addPlayer(player) {
+    if(player.isPlaying==true){
+      this.playerProv.updatePlayer(player.$id,{isPlaying:false})
+    }else{
+      this.playerProv.updatePlayer(player.$id,{isPlaying:true})
+    }
+
+    
+
+    /*
     player.isPlaying = true;
     let id=this.getIndexOfId(player)
     if(id==-1){
@@ -95,6 +107,7 @@ export class SelectPlayerPage {
     }
     console.log("Playing Players array")
     console.log(this.playingPlayers)
+    */
     
   }
 

@@ -51,7 +51,7 @@
   <ion-card>
     <ion-card-header>
       <h2>
-        <strong>Players</strong>
+        <strong>Players playing</strong>
       </h2>
     </ion-card-header>
     <ion-card-content>
@@ -64,14 +64,58 @@
         <h3>Display Name</h3>
       </ion-col>
     </ion-row>
-      <ion-list *ngFor="let player of players$ | async  ">
+      <ion-list *ngFor="let player of playersPlaying$ | async  ">
 
 
         <ion-row>
           <ion-col align-self: stretch>
             <ion-item>
               <ion-label>{{player.name}}</ion-label>
-              <ion-checkbox (ionChange)="addPlayer(player)" checked="player.isPlaying"></ion-checkbox>
+              <ion-checkbox (ionChange)="addPlayer(player)" [checked]="player.isPlaying"></ion-checkbox>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-label>{{player.displayName}}</ion-label>
+          </ion-col>
+        </ion-row>
+    
+      </ion-list>
+      <ion-item>
+          <ion-label fixed color="dark">Game Type:</ion-label>
+          <ion-select interface='popover' [(ngModel)]="gameType">
+            <ion-option value="singles">Singles</ion-option>
+            <ion-option value="doubles" selected="true">Doubles</ion-option>
+          </ion-select>
+        </ion-item>
+      
+        <button ion-button (click)="startRounds()">Start Matches</button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <h2>
+        <strong>Players not playing</strong>
+      </h2>
+    </ion-card-header>
+    <ion-card-content>
+      
+  <ion-row>
+      <ion-col>
+        <h3>Player Name</h3>
+      </ion-col>
+      <ion-col>
+        <h3>Display Name</h3>
+      </ion-col>
+    </ion-row>
+      <ion-list *ngFor="let player of playersNotPlaying$ | async  ">
+
+
+        <ion-row>
+          <ion-col align-self: stretch>
+            <ion-item>
+              <ion-label>{{player.name}}</ion-label>
+              <ion-checkbox (ionChange)="addPlayer(player)" [checked]="player.isPlaying"></ion-checkbox>
             </ion-item>
           </ion-col>
           <ion-col>
