@@ -80,15 +80,7 @@
         </ion-row>
     
       </ion-list>
-      <ion-item>
-          <ion-label fixed color="dark">Game Type:</ion-label>
-          <ion-select interface='popover' [(ngModel)]="gameType">
-            <ion-option value="singles">Singles</ion-option>
-            <ion-option value="doubles" selected="true">Doubles</ion-option>
-          </ion-select>
-        </ion-item>
-      
-        <button ion-button (click)="startRounds()">Start Matches</button>
+
     </ion-card-content>
   </ion-card>
 
@@ -124,17 +116,19 @@
         </ion-row>
     
       </ion-list>
-      <ion-item>
-          <ion-label fixed color="dark">Game Type:</ion-label>
-          <ion-select interface='popover' [(ngModel)]="gameType">
-            <ion-option value="singles">Singles</ion-option>
-            <ion-option value="doubles" selected="true">Doubles</ion-option>
-          </ion-select>
-        </ion-item>
       
-        <button ion-button (click)="startRounds()">Start Matches</button>
     </ion-card-content>
   </ion-card>
+
+  <ion-item>
+    <ion-label fixed color="dark">Game Type:</ion-label>
+    <ion-select interface='popover' [(ngModel)]="gameType">
+      <ion-option value="singles">Singles</ion-option>
+      <ion-option value="doubles" selected="true">Doubles</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <button ion-button (click)="startRounds()">Start Matches</button>
 
 
 

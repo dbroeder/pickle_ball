@@ -26,7 +26,8 @@ export class PlayaProvider {
       playedBye: false,
       playedSingles: false,
       groups:[],
-      currentGame:''
+      currentGame:'',
+      $id:''
     }
 
   }

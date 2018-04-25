@@ -39,18 +39,7 @@ export class CreatePlayerPage {
       
     },11);
 
-    this.playerProv.get('players').then((val) => {
-      this.playerList = val;
-      if (this.player == -1 || this.player == undefined) {
-        this.createPlayerBool = true;
-      } else {
-        this.editPlayerBool = true;
-
-      }
-    });
-    this.playerProv.get('playerLength').then((val) => {
-      this.totalPlayerNumber = val;
-    });
+    
 
     this.player = navParams.get('player');
     if (this.player != -1) {
@@ -155,10 +144,9 @@ export class CreatePlayerPage {
     if (this.checkErrors(this.name, this.rating, this.displayName, -1)) {
       if (this.totalPlayerNumber != undefined) {
         this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating)))
-        this.playerProv.set('playerLength', Number(this.totalPlayerNumber) + 1);
+        
       } else {
         this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating)))
-        this.playerProv.set('playerLength', 1);
 
       }
 

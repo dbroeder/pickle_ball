@@ -20,6 +20,7 @@ interface Players {
   playedBye: boolean;
   groups: Array<any>;
   currentGame:string; 
+  $id:string;
 
   
 }
@@ -35,10 +36,6 @@ export class PlayersProvider {
     this.user=auth.getCurrentUser(); 
     
       this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players'); 
-
-    
-    console.log("Firebase players");
-    console.log(this.players);
   }
 
   createGame(name){
@@ -61,23 +58,50 @@ export class PlayersProvider {
     })
   }
 
-  getPlayers(filterProperty?, filterParam?){
+  getPlayers(filterProperty?, filterParam?,typeOfComparison?:string){
     return this.playerCollection.snapshotChanges().map(actions=>{
       return actions.map(a=>{
         let data = a.payload.doc.data() as Players;
-        let $id = a.payload.doc.id;
-        return  {$id,...data};
+        data.$id = a.payload.doc.id;
+        return  {...data};
       }).filter((item)=>{
-        return item[filterProperty]==filterParam;
+        if(typeOfComparison == 'contains'){
+          return item[filterProperty].some((i)=>{
+            i==filterParam;
+          })
+        }
+        else{
+          return item[filterProperty]==filterParam;
+        }
+        
       })
     })
   }
+
+  /*
+  updateAll(updateProperty,property?,valueOnly?){
+    this.getPlayers().forEach((players)=>{
+      players.forEach((player)=>{
+        if(player[property]==valueOnly){
+          this.updatePlayer(player.$id,updateProperty);
+        }else{
+          this.updatePlayer(player.$id,updateProperty);
+        }
+        
+      })
+    })
+  }
+  */
+
+
 
   getRoundPlayers(round:string){
     return this.afs.doc(`users/user${this.user.uid}`).collection('players',(ref) =>{
       return ref.where('currentGame','==',round)
     }).snapshotChanges();
   }
+
+  
 
   addPlayer(player){
     this.playerCollection.add({
@@ -92,7 +116,8 @@ export class PlayersProvider {
       playedSingles:player.playedSingles,
       playedBye: player.playedBye,
       groups:[],
-      currentGame:''
+      currentGame:'',
+      $id: ''
     }).then(result => {
       console.log("Document added with id >>> ", result.id);
     }).catch(error=>{
@@ -120,17 +145,7 @@ export class PlayersProvider {
     })
   }
 
-  get(dataBaseName: any) {
-    
-    console.log("Player Provider getting data from "+dataBaseName);
-    return this.storage.get(dataBaseName).then((data) => {
-      return data;
-    });
-  }
-  set(storeTag:any,item: any){
-    console.log("Setting value: "+item+" with key: "+storeTag);
-    this.storage.set(storeTag,item);
-  }
+
 
 
 }

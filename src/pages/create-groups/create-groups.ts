@@ -14,7 +14,8 @@ interface Players {
   playedSingles:boolean;
   playedBye: boolean;
   groups: Array<any>;
-  currentGame:string;
+  currentGame:string; 
+  $id:string;
 
   
 }
@@ -25,7 +26,7 @@ interface Players {
 })
 export class CreateGroupsPage {
   players:Observable<Players[]>;
-  groupPlayers=[];
+  groupPlayers;
   groupName;
   groups=[];
   nameError=false;
@@ -34,17 +35,20 @@ export class CreateGroupsPage {
   group;
 
   constructor(public viewCtrl:ViewController,public navCtrl: NavController, public navParams: NavParams,public playerProv:PlayersProvider) {
-    this.players=this.playerProv.getPlayers();
-    this.playerProv.get("groups").then((val)=>{
-      this.groups=val;
-      if(this.groups==undefined){
-        console.log("undefined group")
-        this.groups=[];
-      }
-    });
-    this.group = this.navParams.get("group");
+    
+    
     
   } 
+
+  ionViewDidLoad(){
+    this.players=this.playerProv.getPlayers('isPlaying',false);
+    this.groupPlayers=this.playerProv.getPlayers('isPlaying',true);
+    this.groupPlayers.forEach(players=>{
+      players.forEach(player=>{
+        this.playerProv.updatePlayer(player.$id,{isPlaying:false})
+      })
+    })
+  }
 
   checkGroupName(){
     let nameExists=false;
@@ -54,6 +58,15 @@ export class CreateGroupsPage {
       }
     })
     return nameExists;
+  }
+
+  addPlayer(player){
+    if(player.isPlaying==false){
+      this.playerProv.updatePlayer(player.$id,{isPlaying:true})
+    }
+    else{
+      this.playerProv.updatePlayer(player.$id,{isPlaying:false})
+    }
   }
 
   goBack(){
@@ -82,18 +95,14 @@ export class CreateGroupsPage {
      
     }
     if(this.nameError==false && this.playerError==false){
-          let group={
-      name:this.groupName,
-      players:this.groupPlayers
+          
     }
     
-    this.groups.push(group);
+    
     console.log("Groups");
     console.log(this.groups);
-   
-    this.playerProv.set("groups",this.groups);
     this.viewCtrl.dismiss();
-    }
+    
 
 
   }
@@ -108,26 +117,5 @@ export class CreateGroupsPage {
     return id;
   }
 
-  addPlayer(player){
-    console.log(this.groupPlayers)
-    player.isPlaying = true;
-    if(this.groupPlayers.some((element)=>{
-      return element.$id==player.$id;
-    })){
-      this.groupPlayers.splice(this.groupPlayers.indexOf((element)=>{
-        if(element.$id==player.$id){
-          return player.$id;
-        }
-      }));
-      
-    }
-    else{
-      this.groupPlayers.push(player);
-    }
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad CreateGroupsPage');
-  }
-
+  
 }

@@ -16,6 +16,7 @@ interface Players {
   userId: string;
   playedSingles:boolean;
   playedBye: boolean;
+  $id: string;
 }
 
 @Component({
