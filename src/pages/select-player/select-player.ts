@@ -4,6 +4,7 @@ import { LeaguePlayPage } from '../league-play/league-play';
 import {PlayersProvider} from '../../providers/players/players';
 import {CreateGroupsPage} from '../create-groups/create-groups';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 
 interface Players {
   name: string;
@@ -33,6 +34,7 @@ export class SelectPlayerPage {
   gameType="doubles";
   groupsExist;
   groups=[];
+  unsubscribe: Subject<void>= new Subject<void>();
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl:ViewController,
     public modalCtrl: ModalController, public platform:Platform, public playerProv:PlayersProvider,public zone: NgZone) {
@@ -58,16 +60,19 @@ export class SelectPlayerPage {
 
 
   createGroup(){
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
     let modal =this.modalCtrl.create(CreateGroupsPage);
     modal.onDidDismiss(()=>{
+  
     })
     modal.present();
   }
 
   ionViewDidLoad() {
     this.zone.run(()=>{
-      this.playersPlaying$ = this.playerProv.getPlayers('isPlaying',true); 
-      this.playersNotPlaying$ = this.playerProv.getPlayers('isPlaying',false)
+      this.playersPlaying$ = this.playerProv.getPlayers(this.unsubscribe,'isPlaying',true); 
+      this.playersNotPlaying$ = this.playerProv.getPlayers(this.unsubscribe,'isPlaying',false)
       console.log('ionViewDidLoad SelectPlayerPage');
       //console.log(this.players$);
       //this.filteredList$=this.filterPlayers(true);

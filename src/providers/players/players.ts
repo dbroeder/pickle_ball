@@ -34,8 +34,15 @@ export class PlayersProvider {
   players: Observable<Players[]>;
   constructor( public storage: Storage, private afs: AngularFirestore,public auth:AuthorizorProvider) {
     this.user=auth.getCurrentUser(); 
-    
+    this.afs.firestore.collection;
       this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players'); 
+  }
+
+  batchWrite(){
+    var batch = this.afs.firestore.batch();
+    let docsToWrite=this.afs.firestore.doc(`users/user${this.user.uid}`).collection('players').get();
+    //docsToWrite.get()
+
   }
 
   createGame(name){
@@ -58,7 +65,7 @@ export class PlayersProvider {
     })
   }
 
-  getPlayers(filterProperty?, filterParam?,typeOfComparison?:string){
+  getPlayers(event,filterProperty?, filterParam?,typeOfComparison?:string){
     return this.playerCollection.snapshotChanges().map(actions=>{
       return actions.map(a=>{
         let data = a.payload.doc.data() as Players;
@@ -75,7 +82,7 @@ export class PlayersProvider {
         }
         
       })
-    })
+    }).takeUntil(event)
   }
 
   /*
@@ -101,7 +108,7 @@ export class PlayersProvider {
     }).snapshotChanges();
   }
 
-  
+
 
   addPlayer(player){
     this.playerCollection.add({

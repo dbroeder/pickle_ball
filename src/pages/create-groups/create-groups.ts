@@ -25,7 +25,7 @@ interface Players {
   templateUrl: 'create-groups.html',
 })
 export class CreateGroupsPage {
-  players:Observable<Players[]>;
+  players;
   groupPlayers;
   groupName;
   groups=[];
@@ -41,13 +41,10 @@ export class CreateGroupsPage {
   } 
 
   ionViewDidLoad(){
-    this.players=this.playerProv.getPlayers('isPlaying',false);
-    this.groupPlayers=this.playerProv.getPlayers('isPlaying',true);
-    this.groupPlayers.forEach(players=>{
-      players.forEach(player=>{
-        this.playerProv.updatePlayer(player.$id,{isPlaying:false})
-      })
-    })
+    this.players=this.playerProv.getPlayers('isPlaying',false).subscribe();
+    this.groupPlayers=this.playerProv.getPlayers('isPlaying',true).subscribe();
+    console.log("Players Subscribed",this.players)
+    
   }
 
   checkGroupName(){

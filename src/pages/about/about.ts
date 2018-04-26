@@ -4,6 +4,7 @@ import {CreatePlayerPage} from '../create-player/create-player';
 import {PlayersProvider} from '../../providers/players/players';
 import {SelectPlayerPage} from '../select-player/select-player';
 import { Observable } from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject'
 
 interface Players {
   name: string;
@@ -26,7 +27,7 @@ interface Players {
 export class AboutPage {
 
   
-
+  unsubscribe: Subject<void>= new Subject<void>();
   playersDontExist=false;
   players: Observable<Players[]>;
 
@@ -42,7 +43,7 @@ export class AboutPage {
     
   }
   ionViewWillEnter(){
-    this.players = this.playerProv.getPlayers();
+    this.players = this.playerProv.getPlayers(this.unsubscribe);
   }
 
 
