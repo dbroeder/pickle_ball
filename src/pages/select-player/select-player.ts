@@ -51,7 +51,7 @@ export class SelectPlayerPage {
 
   filterPlayers(filterParam){
     return this.players$.map((players)=>{
-      players.filter((player)=>{
+      return players.filter((player)=>{
         return player.isPlaying==filterParam;
       })
     })
@@ -71,12 +71,15 @@ export class SelectPlayerPage {
 
   ionViewDidLoad() {
     this.zone.run(()=>{
-      this.playersPlaying$ = this.playerProv.getPlayers(this.unsubscribe,'isPlaying',true); 
-      this.playersNotPlaying$ = this.playerProv.getPlayers(this.unsubscribe,'isPlaying',false)
+      this.players$ = this.playerProv.getPlayers(this.unsubscribe); 
+      this.playersPlaying$=this.filterPlayers(true)
+      this.playersNotPlaying$=this.filterPlayers(false)
+      //this.playersNotPlaying$ = this.playerProv.getPlayers(this.unsubscribe)
       console.log('ionViewDidLoad SelectPlayerPage');
       //console.log(this.players$);
       //this.filteredList$=this.filterPlayers(true);
       console.log(this.filteredList$)
+      
     
     })
   }
@@ -115,6 +118,10 @@ export class SelectPlayerPage {
     console.log(this.playingPlayers)
     */
     
+  }
+
+  goBack(){
+    this.viewCtrl.dismiss()
   }
 
   startRounds(){

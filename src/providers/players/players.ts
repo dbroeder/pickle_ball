@@ -36,19 +36,47 @@ export class PlayersProvider {
     this.user=auth.getCurrentUser(); 
     this.afs.firestore.collection;
       this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players'); 
+      this.players=this.playerCollection.snapshotChanges().map(actions=>{
+        return actions.map(a=>{
+          let data = a.payload.doc.data() as Players;
+          data.$id = a.payload.doc.id;
+          return  {...data};
+        })
+      })
   }
 
-  batchWrite(){
+  batchWrite(functionToWrite:Function){
     var batch = this.afs.firestore.batch();
-    let docsToWrite=this.afs.firestore.doc(`users/user${this.user.uid}`).collection('players').get();
-    //docsToWrite.get()
+    this.afs.firestore.doc(`users/user${this.user.uid}`).collection('players').get().then((result)=>{
+      result.forEach((doc)=>functionToWrite(doc))
+    }).catch((e)=>{
+      console.error(e);
+    })
+    batch.commit();
 
   }
 
-  createGame(name){
-    this.afs.doc(`users/user${this.user.uid}`).update({
-      groups: name.push(name)
-    })
+  createGroup(name){
+    const userRef = this.afs.firestore.doc(`users/user${this.user.uid}`)
+
+    this.afs.firestore.runTransaction(transaction => {
+        // This code may get re-run multiple times if there are conflicts.
+        return transaction.get(userRef).then(doc => {
+            if (!doc.data().groups) {
+                transaction.set(userRef,{
+                    groups: [name]
+                });
+            } else {
+                const groups = doc.data().groups;
+                groups.push(name);
+                transaction.update(userRef, { groups: groups });
+            }
+        });
+    }).then(function () {
+        console.log("Transaction successfully committed!");
+    }).catch(function (error) {
+        console.log("Transaction failed: ", error);
+    });
   }
 
   getGroups(){
@@ -65,24 +93,9 @@ export class PlayersProvider {
     })
   }
 
-  getPlayers(event,filterProperty?, filterParam?,typeOfComparison?:string){
-    return this.playerCollection.snapshotChanges().map(actions=>{
-      return actions.map(a=>{
-        let data = a.payload.doc.data() as Players;
-        data.$id = a.payload.doc.id;
-        return  {...data};
-      }).filter((item)=>{
-        if(typeOfComparison == 'contains'){
-          return item[filterProperty].some((i)=>{
-            i==filterParam;
-          })
-        }
-        else{
-          return item[filterProperty]==filterParam;
-        }
-        
-      })
-    }).takeUntil(event)
+  getPlayers(event,filterFunction?:boolean ) {
+    return this.players.takeUntil(event)
+    
   }
 
   /*
@@ -126,6 +139,7 @@ export class PlayersProvider {
       currentGame:'',
       $id: ''
     }).then(result => {
+      this.updatePlayer(result.id,{$id:result.id})
       console.log("Document added with id >>> ", result.id);
     }).catch(error=>{
       console.error("Error adding document: ", error);

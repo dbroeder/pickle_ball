@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NavController, NavParams,ViewController } from 'ionic-angular';
 import{PlayersProvider} from "../../providers/players/players";
 import { Observable } from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+
 interface Players {
   name: string;
   displayName: string;
@@ -33,6 +35,7 @@ export class CreateGroupsPage {
   playerError=false;
   errorMessage;
   group;
+  unsubscribe: Subject<void>=new Subject<void>();
 
   constructor(public viewCtrl:ViewController,public navCtrl: NavController, public navParams: NavParams,public playerProv:PlayersProvider) {
     
@@ -41,8 +44,8 @@ export class CreateGroupsPage {
   } 
 
   ionViewDidLoad(){
-    this.players=this.playerProv.getPlayers('isPlaying',false).subscribe();
-    this.groupPlayers=this.playerProv.getPlayers('isPlaying',true).subscribe();
+    this.players=this.playerProv.getPlayers(this.unsubscribe);
+    this.groupPlayers=this.playerProv.getPlayers(this.unsubscribe);
     console.log("Players Subscribed",this.players)
     
   }
@@ -92,7 +95,7 @@ export class CreateGroupsPage {
      
     }
     if(this.nameError==false && this.playerError==false){
-          
+         this.playerProv.createGroup(this.groupName);
     }
     
     

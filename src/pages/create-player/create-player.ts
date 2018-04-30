@@ -46,8 +46,11 @@ export class CreatePlayerPage {
       this.displayName = this.player.displayName;
       this.name = this.player.name;
       this.rating = Number(this.player.rating);
+      this.editPlayerBool=true;
+    }else{
+      this.createPlayerBool=true;
     }
-    console.log(this.player.id)
+    console.log(this.player)
 
   }
 
@@ -62,7 +65,7 @@ export class CreatePlayerPage {
       resolve(id);
     })
   }
-
+ 
   savePlayer() {
     this.player.name = this.name;
     this.player.rating = this.rating;

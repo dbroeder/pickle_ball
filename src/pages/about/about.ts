@@ -17,6 +17,7 @@ interface Players {
   userId: string;
   playedSingles:boolean;
   playedBye: boolean;
+  $id:string;
 }
 
 
@@ -45,10 +46,20 @@ export class AboutPage {
   ionViewWillEnter(){
     this.players = this.playerProv.getPlayers(this.unsubscribe);
   }
-
+  
 
   selectPlayers(event){
-    this.navCtrl.push(SelectPlayerPage);
+    this.playerProv.batchWrite((doc)=>{
+      this.playerProv.updatePlayer(doc.id,{isPlaying:false})
+    });
+    this.unsubscribe.next()
+    this.unsubscribe.complete()
+    let modal = this.modalCtrl.create(SelectPlayerPage);
+    modal.onDidDismiss(()=>{
+      this.unsubscribe=new Subject<void>()
+      this.players=this.playerProv.getPlayers(this.unsubscribe)
+    })
+    modal.present()
   }
     
 

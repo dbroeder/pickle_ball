@@ -18,7 +18,16 @@ $tabs-tab-color-active: black;
 
 @import "ionic.globals";
 
-
+ion-modal {
+  .modal-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+  }
+}
 // Shared Variables
 // --------------------------------------------------
 // To customize the look and feel of this app, you can override
