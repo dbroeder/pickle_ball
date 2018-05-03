@@ -34,7 +34,7 @@ export class PlayersProvider {
   players: Observable<Players[]>;
   constructor( public storage: Storage, private afs: AngularFirestore,public auth:AuthorizorProvider) {
     this.user=auth.getCurrentUser(); 
-    this.afs.firestore.collection;
+    if(this.user){
       this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players'); 
       this.players=this.playerCollection.snapshotChanges().map(actions=>{
         return actions.map(a=>{
@@ -43,6 +43,8 @@ export class PlayersProvider {
           return  {...data};
         })
       })
+    }
+      
   }
 
   batchWrite(functionToWrite:Function){
@@ -84,6 +86,7 @@ export class PlayersProvider {
   }
   
   createUser(){
+    this.user=this.auth.getCurrentUser()
     this.afs.collection('users').doc(`user${this.user.uid}`).set({
       name:this.user.email,
       groups:[]
