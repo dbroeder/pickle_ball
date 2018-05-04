@@ -38,9 +38,6 @@ export class CreatePlayerPage {
       backPressed();
       
     },11);
-
-    
-
     this.player = navParams.get('player');
     if (this.player != -1) {
       this.displayName = this.player.displayName;
@@ -52,18 +49,6 @@ export class CreatePlayerPage {
     }
     console.log(this.player)
 
-  }
-
-  getIndexOfId(player): Promise<number> {
-    return new Promise<number>(resolve => {
-      let id = -1;
-      for (let i = 0; i < this.playerList.length; i++) {
-        if (player._id == this.playerList[i]._id) {
-          id = i;
-        }
-      }
-      resolve(id);
-    })
   }
  
   savePlayer() {
@@ -77,10 +62,6 @@ export class CreatePlayerPage {
     }
 
 
-
-  }
-
-  ionViewDidLoad() {
 
   }
 
@@ -100,15 +81,13 @@ export class CreatePlayerPage {
       if (this.displayName.length > max_length) {
         this.displayName = this.displayName.substr(0, max_length)
       }
-
     }
-
   }
 
   checkErrors(name, num, dispName, id?) {
       let unique = true;
     
-     // console.log(this.playerProv.checkExistingNames(name,id))
+      console.log("Name exists: " +this.playerProv.checkExistingNames(name,id))
       if (this.playerProv.checkExistingNames(name,id) || !name) {
         this.nameDupError = true;
         unique = false;

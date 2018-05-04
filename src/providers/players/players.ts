@@ -47,22 +47,17 @@ export class PlayersProvider {
         })
       })
   }
-  checkExistingNames(name:String,id){
+
+  async checkExistingNames(name:String,id){
  
       let nameExists = false;
-      this.players.forEach(players=>{
+      await this.players.forEach(players=>{
         nameExists= players.some(player=>{
           console.log("help")
           return player.name==name;
         })
-        
-        
       })
       return nameExists
-    
-    
-    
-    
   }
 
   getNewUser(){
