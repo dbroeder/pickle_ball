@@ -33,9 +33,12 @@ export class PlayersProvider {
   playerCollection: AngularFirestoreCollection<Players>;
   players: Observable<Players[]>;
   constructor( public storage: Storage, private afs: AngularFirestore,public auth:AuthorizorProvider) {
-    this.user=auth.getCurrentUser(); 
-    if(this.user){
-      this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players'); 
+    this.user=auth.getCurrentUser();
+      
+  }
+
+  playersFirstLoad(){
+    this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players'); 
       this.players=this.playerCollection.snapshotChanges().map(actions=>{
         return actions.map(a=>{
           let data = a.payload.doc.data() as Players;
@@ -43,9 +46,31 @@ export class PlayersProvider {
           return  {...data};
         })
       })
-    }
-      
   }
+  checkExistingNames(name:String,id){
+ 
+      let nameExists = false;
+      this.players.forEach(players=>{
+        nameExists= players.some(player=>{
+          console.log("help")
+          return player.name==name;
+        })
+        
+        
+      })
+      return nameExists
+    
+    
+    
+    
+  }
+
+  getNewUser(){
+    this.user = this.auth.getCurrentUser()
+    console.log("new user",this.user.uid)
+  }
+
+
 
   batchWrite(functionToWrite:Function){
     var batch = this.afs.firestore.batch();
@@ -96,7 +121,7 @@ export class PlayersProvider {
     })
   }
 
-  getPlayers(event,filterFunction?:boolean ) {
+  getPlayers(event ) {
     return this.players.takeUntil(event)
     
   }

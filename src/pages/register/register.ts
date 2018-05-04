@@ -24,7 +24,7 @@ export class RegisterPage {
   showPassword = false;
   message='';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthorizorProvider,public playerProv:PlayersProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,public auth: AuthorizorProvider,public playerProv:PlayersProvider) {
   }
 
   ionViewDidLoad() {

@@ -41,6 +41,8 @@ export class AboutPage {
         
         
       });
+      this.playerProv.getNewUser()
+      this.playerProv.playersFirstLoad()
     
   }
   ionViewWillEnter(){
@@ -48,7 +50,7 @@ export class AboutPage {
   }
   
 
-  selectPlayers(event){
+  selectPlayers(){
     this.playerProv.batchWrite((doc)=>{
       this.playerProv.updatePlayer(doc.id,{isPlaying:false})
     });

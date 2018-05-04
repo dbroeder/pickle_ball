@@ -21,9 +21,10 @@
   <ion-input [(ngModel)]='username' placeholder="myemail@whatever.com"></ion-input> 
 </ion-item>
   <ion-item>
-    <ion-label [style.color]='passswordColor' >Password</ion-label>
+    <ion-label [style.color]='passwordColor' >Password</ion-label>
     <ion-input  [(ngModel)]= 'password' type="password" style.background ='white' (keyup.enter)="login()"></ion-input>
   </ion-item>
+  <p >{{message}}</p>
   
   <button ion-button (click)="login()">Login</button>
   <button ion-button (click)='register()'>Register</button><br>

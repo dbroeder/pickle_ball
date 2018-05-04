@@ -105,56 +105,41 @@ export class CreatePlayerPage {
 
   }
 
-  checkErrors(name, num, dispName, id) {
-    let unique = true;
-    if (this.playerList != undefined) {
-      for (let player of this.playerList) {
-        if (player.name == name && player._id != id) {
-          this.nameDupError = true;
-          unique = false;
-          this.errorMessage = "duplicate name";
-        }
-      }
-      if(!name){
+  checkErrors(name, num, dispName, id?) {
+      let unique = true;
+    
+     // console.log(this.playerProv.checkExistingNames(name,id))
+      if (this.playerProv.checkExistingNames(name,id) || !name) {
         this.nameDupError = true;
         unique = false;
+        this.errorMessage = "name is blank or already exists";
       }
-      if (dispName) {
-        if(dispName.length > 3){
-          this.dispNameError = true;
-          unique = false;
-          this.errorMessage = 'needs at most 3 characters'
-        }
-          
-        
-      }else{
+      if (!dispName || dispName.length > 3) {
         this.dispNameError = true;
         unique = false;
-      }
-      if (num > 5 || num < 1|| !num) {
+        this.errorMessage = 'needs at most 3 characters'
+      } 
+      if (num > 5 || num < 1 || !num) {
         this.ratingError = true;
         unique = false;
       }
-      return unique;
-    } else {
-      return unique;
-    }
-
-
+      return unique
+    
   }
 
   createPlayer() {
-    if (this.checkErrors(this.name, this.rating, this.displayName, -1)) {
-      if (this.totalPlayerNumber != undefined) {
-        this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating)))
-        
-      } else {
+   
+      
+      if(this.checkErrors(this.name, this.rating, this.displayName,-1)){
         this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating)))
 
+
+        this.viewCtrl.dismiss();
       }
-
-      this.viewCtrl.dismiss();
-    }
+    
+     
+        
+    
 
   }
 

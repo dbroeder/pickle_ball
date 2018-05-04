@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {AuthorizorProvider} from '../../providers/authorizor/authorizor';
 import {RegisterPage} from '../../pages/register/register';
 import {TabsPage} from '../../pages/tabs/tabs';
+import { PlayersProvider } from '../../providers/players/players';
 
 
 
@@ -16,6 +17,7 @@ export class LoginPage {
   password='111111';
   usernameColor='black';
   passwordColor='black';
+  message;
   constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthorizorProvider) {
   }
 
@@ -30,17 +32,20 @@ export class LoginPage {
   login(){
     console.log(this.username +' and '+this.password)
     this.auth.loginUser(this.username,this.password).then((result)=>{
-      console.log(this.auth.getCurrentUser())
       this.navCtrl.setRoot(TabsPage);
     }).catch((e)=>{
-      console.error(e);
+      console.error(e.message);
+      this.message=e.message
       this.usernameColor='red';
-  this.passwordColor='red';
+      this.passwordColor='red';
     })
     
   }
 
   register(){
+    this.usernameColor='black';
+      this.passwordColor='black';
+      this.message=''
     this.navCtrl.push(RegisterPage);
   }
 
