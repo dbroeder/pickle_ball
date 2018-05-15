@@ -85,36 +85,44 @@ export class CreatePlayerPage {
   }
 
   checkErrors(name, num, dispName, id?) {
+    let promise = new Promise((resolve)=>{
       let unique = true;
-    
-      console.log("Name exists: " +this.playerProv.checkExistingNames(name,id))
-      if (this.playerProv.checkExistingNames(name,id) || !name) {
-        this.nameDupError = true;
-        unique = false;
-        this.errorMessage = "name is blank or already exists";
-      }
-      if (!dispName || dispName.length > 3) {
-        this.dispNameError = true;
-        unique = false;
-        this.errorMessage = 'needs at most 3 characters'
-      } 
-      if (num > 5 || num < 1 || !num) {
-        this.ratingError = true;
-        unique = false;
-      }
-      return unique
+      this.playerProv.checkExistingNames(name,id).then(result=>{
+        if (result || !name) {
+          this.nameDupError = true;
+          unique = false;
+          this.errorMessage = "name is blank or already exists";
+        }
+        if (!dispName || dispName.length > 3) {
+          this.dispNameError = true;
+          unique = false;
+          this.errorMessage = 'needs at most 3 characters'
+        } 
+        if (num > 5 || num < 1 || !num) {
+          this.ratingError = true;
+          unique = false;
+        }
+        resolve( unique)
+      })
+      
+    })
+      
+      return promise
+      
     
   }
 
   createPlayer() {
    
-      
-      if(this.checkErrors(this.name, this.rating, this.displayName,-1)){
+      this.checkErrors(this.name, this.rating, this.displayName,-1).then((res)=>{
+        if(res){
         this.playerProv.addPlayer(this.playaProv.createPlayaByName(this.name,this.displayName,Number(this.rating)))
 
 
         this.viewCtrl.dismiss();
       }
+      })
+      
     
      
         

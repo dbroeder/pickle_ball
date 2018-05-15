@@ -5,6 +5,7 @@ import {PlayersProvider} from '../../providers/players/players';
 import {CreateGroupsPage} from '../create-groups/create-groups';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import { AboutPage } from '../about/about';
 
 interface Players {
   name: string;
@@ -33,7 +34,7 @@ export class SelectPlayerPage {
   playingPlayers = [];
   gameType="doubles";
   groupsExist;
-  groups=[];
+  groups
   unsubscribe: Subject<void>= new Subject<void>();
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl:ViewController,
@@ -62,6 +63,9 @@ export class SelectPlayerPage {
   createGroup(){
     this.unsubscribe.next();
     this.unsubscribe.complete();
+    this.playerProv.batchWrite((doc)=>{
+      this.playerProv.updatePlayer(doc.id,{isPlaying:false})
+    })
     let modal =this.modalCtrl.create(CreateGroupsPage);
     modal.onDidDismiss(()=>{
   
@@ -79,6 +83,9 @@ export class SelectPlayerPage {
       //console.log(this.players$);
       //this.filteredList$=this.filterPlayers(true);
       console.log(this.filteredList$)
+      this.groups=this.playerProv.getGroups()
+      console.log(this.groups)
+      
       
     
     })
@@ -130,6 +137,11 @@ export class SelectPlayerPage {
       gameType: this.gameType
     }
     let modal = this.modalCtrl.create(LeaguePlayPage, passParams);
+    modal.onDidDismiss(()=>{
+      this.navCtrl.popAll().catch((e)=>{
+        console.error(e)
+      })
+    })
     modal.present();
 
   }

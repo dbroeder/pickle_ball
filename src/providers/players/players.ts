@@ -22,7 +22,7 @@ interface Players {
   currentGame:string; 
   $id:string;
 
-  
+   
 }
 
 export interface Item { name: string; }
@@ -32,6 +32,7 @@ export class PlayersProvider {
   user;
   playerCollection: AngularFirestoreCollection<Players>;
   players: Observable<Players[]>;
+  groups
   constructor( public storage: Storage, private afs: AngularFirestore,public auth:AuthorizorProvider) {
     this.user=auth.getCurrentUser();
       
@@ -46,18 +47,32 @@ export class PlayersProvider {
           return  {...data};
         })
       })
+      this.groups = this.afs.doc(`users/user${this.user.uid}`).snapshotChanges().map(data=>{
+        return data.payload.data().groups
+      })
   }
 
-  async checkExistingNames(name:String,id){
- 
-      let nameExists = false;
-      await this.players.forEach(players=>{
-        nameExists= players.some(player=>{
-          console.log("help")
-          return player.name==name;
+  checkExistingNames(name: String, id) {
+    let promise = new Promise((resolve, reject) => {
+      this.afs.firestore.doc(`users/user${this.user.uid}`).collection('players').where('name', '==', name)
+        .get()
+        .then((all) => {
+          console.log(all.size)
+          let bool;
+          if (!all.size || all.size == 0) {
+            bool = false
+          }
+          else {
+            bool = true;
+          }
+          return resolve(bool);
         })
-      })
-      return nameExists
+        .catch((e) => {
+          console.error(e)
+        })
+    })
+    return promise
+
   }
 
   getNewUser(){
@@ -65,6 +80,7 @@ export class PlayersProvider {
     console.log("new user",this.user.uid)
   }
 
+  
 
 
   batchWrite(functionToWrite:Function){
@@ -74,35 +90,27 @@ export class PlayersProvider {
     }).catch((e)=>{
       console.error(e);
     })
-    batch.commit();
+    batch.commit().catch(e=>{
+      console.error(e)
+    });
 
   }
 
   createGroup(name){
     const userRef = this.afs.firestore.doc(`users/user${this.user.uid}`)
-
-    this.afs.firestore.runTransaction(transaction => {
-        // This code may get re-run multiple times if there are conflicts.
-        return transaction.get(userRef).then(doc => {
-            if (!doc.data().groups) {
-                transaction.set(userRef,{
-                    groups: [name]
-                });
-            } else {
-                const groups = doc.data().groups;
-                groups.push(name);
-                transaction.update(userRef, { groups: groups });
-            }
-        });
-    }).then(function () {
-        console.log("Transaction successfully committed!");
-    }).catch(function (error) {
-        console.log("Transaction failed: ", error);
-    });
+    userRef.get().then(data=>{
+      let tempGroups = data.data().groups
+      tempGroups.push(name)
+      console.log(tempGroups)
+      userRef.update({groups:tempGroups})
+    }).catch(e=>{
+      console.error(e)
+    })
+    
   }
 
   getGroups(){
-    return this.afs.doc(`users/user${this.user.uid}`).snapshotChanges()
+    return this.groups
   }
   
   createUser(){

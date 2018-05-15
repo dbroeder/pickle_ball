@@ -7,7 +7,7 @@ import { AboutPage } from '../pages/about/about';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { RemovePlayerPage} from '../pages/remove-player/remove-player'
-import { RoundsPage} from '../pages/rounds/rounds';
+
 import {ResultsPage } from '../pages/results/results';
 import {CreatePlayerPage} from '../pages/create-player/create-player';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -46,7 +46,7 @@ export const firebaseConfig = {
     HomePage,
     TabsPage,
     RemovePlayerPage,
-    RoundsPage,
+    
     ResultsPage,
     CreatePlayerPage,
     SelectPlayerPage,
@@ -72,7 +72,7 @@ export const firebaseConfig = {
     HomePage,
     TabsPage,
     RemovePlayerPage,
-    RoundsPage,
+   
     ResultsPage,
     CreatePlayerPage,
     SelectPlayerPage,

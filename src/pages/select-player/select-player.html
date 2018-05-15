@@ -12,7 +12,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class='background' padding>
 
   <ion-card>
     <ion-card-header>
@@ -23,6 +23,9 @@
     <ion-card-content>
       <ion-item *ngIf="!groupsExist">
         <h6>No Groups Exist</h6>
+        <ion-list *ngFor="let group$ of groups | async">
+          <li>{{group$}}</li>
+        </ion-list>
       </ion-item>
       <div *ngIf="groupsExist">
         <ion-row>
@@ -33,7 +36,7 @@
             <h4>Number of Players</h4>
           </ion-col>
         </ion-row>
-        <ion-list *ngFor="let group$ of groups">
+        <ion-list *ngFor="let group$ of groups | async">
     
           <ion-row>
             <ion-col align-self: stretch>

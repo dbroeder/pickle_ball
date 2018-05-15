@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController, NavParams,ViewController } from 'ionic-angular';
 import{PlayersProvider} from "../../providers/players/players";
 import { Observable } from 'rxjs/Observable';
@@ -27,8 +27,8 @@ interface Players {
   templateUrl: 'create-groups.html',
 })
 export class CreateGroupsPage {
-  players;
-  groupPlayers;
+  players: Observable<Players[]>;
+  groupPlayers$: Observable<Players[]>;
   groupName;
   groups=[];
   nameError=false;
@@ -36,18 +36,42 @@ export class CreateGroupsPage {
   errorMessage;
   group;
   unsubscribe: Subject<void>=new Subject<void>();
+  nonGroup$:  Observable<Players[]>;
+  saveBoolean = true;
 
-  constructor(public viewCtrl:ViewController,public navCtrl: NavController, public navParams: NavParams,public playerProv:PlayersProvider) {
-    
+  constructor(public zone: NgZone,public viewCtrl:ViewController,public navCtrl: NavController,
+     public navParams: NavParams,public playerProv:PlayersProvider) {
+    this.groupName=navParams.get('groupName')
     
     
   } 
 
   ionViewDidLoad(){
-    this.players=this.playerProv.getPlayers(this.unsubscribe);
-    this.groupPlayers=this.playerProv.getPlayers(this.unsubscribe);
-    console.log("Players Subscribed",this.players)
+    this.zone.run(()=>{
+      this.players = this.playerProv.getPlayers(this.unsubscribe); 
+      this.groupPlayers$=this.filterPlayers(true)
+      this.nonGroup$ = this.filterPlayers(false)
+      
     
+    })
+    
+  }
+
+  checkName(){
+    if(this.groupName){
+      this.saveBoolean=false;
+    }else{
+      this.saveBoolean=true;
+    }
+  }
+
+  filterPlayers(filterParam){
+    return this.players.map((players)=>{
+      return players.filter((player)=>{
+        return player.isPlaying==filterParam;
+      })
+    })
+
   }
 
   checkGroupName(){
@@ -73,49 +97,26 @@ export class CreateGroupsPage {
     this.viewCtrl.dismiss();
   }
 
+
   saveGroup(){
-    console.log("Group Name "+this.groupName);
-    if(this.groupName==undefined||!this.checkGroupName()||this.groupPlayers.length==0){
-      if(this.groupName==undefined){
-        this.errorMessage="Please enter a group name.";
-        this.nameError=true;
+    this.playerProv.batchWrite((doc)=>{
+      if(!doc.data().groups.some((d)=>{
+        return d == this.groupName
+      })&&doc.data().isPlaying){
+        console.log("adding "+doc.data().name)
+        let tempGroups = doc.data().groups
+        tempGroups.push(this.groupName)
+        this.playerProv.updatePlayer(doc.id,{groups:tempGroups})
       }
-      else if(this.checkGroupName()){
-        this.errorMessage="Group name already exists.";
-        this.nameError=true;
-      }else{
-        this.nameError=false;
-      }
-      if(this.groupPlayers.length==0){
-        this.playerError=true;
-      }
-      else{
-        this.playerError=false;
-      }
-     
-    }
-    if(this.nameError==false && this.playerError==false){
-         this.playerProv.createGroup(this.groupName);
-    }
-    
-    
-    console.log("Groups");
-    console.log(this.groups);
+    })
+    this.playerProv.createGroup(this.groupName)
     this.viewCtrl.dismiss();
     
 
 
   }
 
-  getIndexOfId(player) {
-    let id = -1;
-    for (let i = 0; i < this.groupPlayers.length; i++) {
-      if (player._id == this.groupPlayers[i]._id) {
-        id = i;
-      }
-    }
-    return id;
-  }
+  
 
   
 }

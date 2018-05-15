@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { Platform, ViewController, AlertController, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage,Platform, ViewController, AlertController, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { RemovePlayerPage } from '../remove-player/remove-player';
 import { ResultsPage } from '../results/results';
 import {DoublesMatchesProvider} from '../../providers/doubles-matches/doubles-matches';
 
 
-
+@IonicPage()
 @Component({
   selector: 'page-rounds',
   templateUrl: 'rounds.html',

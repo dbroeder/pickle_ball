@@ -24,7 +24,7 @@ export class LeaguePlayPage {
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams,public platform:Platform,
-  public matchesProv: MatchesProvider, public alertCtrl:AlertController, public modalCtrl: ModalController) {
+  public matchesProv: MatchesProvider, public alertCtrl:AlertController, public modalCtrl: ModalController,public viewCtrl:ViewController) {
    
     let backPressed = platform.registerBackButtonAction(() => {
       console.log("Rounds page back pressed");
@@ -416,6 +416,7 @@ export class LeaguePlayPage {
 
 
   }
+  */
 
   reset() {
     //handles when the quit button is pressed
@@ -433,7 +434,7 @@ export class LeaguePlayPage {
           text: 'Yes',
           handler: () => {
             let data: number;
-            this.viewCtrl.dismiss(data);
+            this.viewCtrl.dismiss()
           }
         }
       ]
@@ -441,6 +442,7 @@ export class LeaguePlayPage {
     alert.present();
 
   }
+  /*
 
   randomList(num) {
     //randomizes player list for random rounds

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController, Platform,AlertController } from 'ionic-angular';
-import {RoundsPage} from '../rounds/rounds';
+
 
 
 @Component({
@@ -40,7 +40,7 @@ export class HomePage{
         number: this.playerNumber,
         gameType: this.gameType
       }
-      let pate = this.modalCtrl.create(RoundsPage,num);
+      let pate = this.modalCtrl.create("RoundsPage",num);
       pate.present();
     }
     

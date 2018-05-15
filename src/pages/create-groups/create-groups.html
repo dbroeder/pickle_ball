@@ -13,12 +13,12 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="background" padding>
   <h3 *ngIf="nameError" class="error">Group Name</h3>
   <p *ngIf="nameError" class="error">{{errorMessage}}</p>
   <h3 *ngIf="!nameError">Group Name</h3>
   <ion-item>
-      <ion-input [(ngModel)]="groupName" type="text" class="input" placeholder="Group Name"></ion-input>
+      <ion-input [(ngModel)]="groupName" type="text" class="input" placeholder="Group Name" (keyup)='checkName()'></ion-input>
   </ion-item>
 
     
@@ -38,7 +38,7 @@
           <h3>Display Name</h3>
         </ion-col>
       </ion-row>
-        <ion-list *ngFor="let player of groupPlayers | async ">
+        <ion-list *ngFor="let player of groupPlayers$ | async ">
   
   
           <ion-row>
@@ -74,7 +74,7 @@
           <h3>Display Name</h3>
         </ion-col>
       </ion-row>
-        <ion-list *ngFor="let player of players | async">
+        <ion-list *ngFor="let player of nonGroup$ | async">
   
   
           <ion-row>
@@ -93,6 +93,6 @@
         
       </ion-card-content>
     </ion-card>
-    <button ion-button (click)="saveGroup()">Save Group</button>
+    <button ion-button [disabled]='saveBoolean' (click)="saveGroup()">Save Group</button>
 
 </ion-content>
