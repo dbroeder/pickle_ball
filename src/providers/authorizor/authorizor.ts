@@ -1,9 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {AngularFireAuth} from 'angularfire2/auth';
-import firebase from 'firebase/app';
-import {TabsPage} from '../../pages/tabs/tabs';
-import {LoginPage} from '../../pages/login/login';
 
 
 

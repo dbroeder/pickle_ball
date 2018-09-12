@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,App } from 'ionic-angular';
-import {LoginPage} from '../../pages/login/login';
-import {AuthorizorProvider} from '../../providers/authorizor/authorizor'
+import { NavController, NavParams,App } from 'ionic-angular';
+import {AuthorizorProvider} from '../../providers/authorizor/authorizor';
+import {LoginPage} from '../login/login'
 
 /**
  * Generated class for the LogoutPage page.
@@ -26,7 +26,7 @@ export class LogoutPage {
 
   logOut(){
     this.auth.logoutUser().then(()=>{
-      this.app.getRootNav().setRoot(LoginPage);
+      this.app.getRootNav().push(LoginPage)
     }).catch((e)=>{
       console.error(e);
     })

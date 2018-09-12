@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import {AuthorizorProvider} from '../../providers/authorizor/authorizor';
-import {RegisterPage} from '../../pages/register/register';
 import {TabsPage} from '../../pages/tabs/tabs';
-import { PlayersProvider } from '../../providers/players/players';
-
 
 
 
@@ -46,7 +43,7 @@ export class LoginPage {
     this.usernameColor='black';
       this.passwordColor='black';
       this.message=''
-    this.navCtrl.push(RegisterPage);
+    this.navCtrl.push("RegisterPage");
   }
 
 }

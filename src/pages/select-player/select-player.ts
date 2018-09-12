@@ -1,11 +1,8 @@
 import { Component, NgZone } from '@angular/core';
-import {  NavController, NavParams,ViewController,ModalController, Platform } from 'ionic-angular';
-import { LeaguePlayPage } from '../league-play/league-play';
+import {  NavController, NavParams,ViewController,ModalController, Platform, IonicPage } from 'ionic-angular';
 import {PlayersProvider} from '../../providers/players/players';
-import {CreateGroupsPage} from '../create-groups/create-groups';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import { AboutPage } from '../about/about';
 
 interface Players {
   name: string;
@@ -21,6 +18,7 @@ interface Players {
   $id: string;
 }
 
+@IonicPage()
 @Component({
   selector: 'page-select-player',
   templateUrl: 'select-player.html',
@@ -34,8 +32,9 @@ export class SelectPlayerPage {
   playingPlayers = [];
   gameType="doubles";
   groupsExist;
-  groups
+  groups$:Observable<string[]>
   unsubscribe: Subject<void>= new Subject<void>();
+  groupUnsubscribe: Subject<void>= new Subject<void>();
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl:ViewController,
     public modalCtrl: ModalController, public platform:Platform, public playerProv:PlayersProvider,public zone: NgZone) {
@@ -63,44 +62,60 @@ export class SelectPlayerPage {
   createGroup(){
     this.unsubscribe.next();
     this.unsubscribe.complete();
+    this.groupUnsubscribe.next();
+    this.groupUnsubscribe.complete();
     this.playerProv.batchWrite((doc)=>{
-      this.playerProv.updatePlayer(doc.id,{isPlaying:false})
+      if(doc.data().isPlaying==true){
+        this.playerProv.updatePlayer(doc.id,{isPlaying:false})
+      }
     })
-    let modal =this.modalCtrl.create(CreateGroupsPage);
+    let modal =this.modalCtrl.create("CreateGroupsPage");
     modal.onDidDismiss(()=>{
-  
+      this.unsubscribe=new Subject<void>()
+      this.groupUnsubscribe = new Subject<void>()
+      this.groups$=this.playerProv.getGroups(this.groupUnsubscribe)
+      this.players$=this.playerProv.getPlayers(this.unsubscribe)
+      this.playersPlaying$=this.filterPlayers(true)
+      this.playersNotPlaying$=this.filterPlayers(false)
     })
     modal.present();
   }
 
+  deleteGroup(){
+    
+  }
+
   ionViewDidLoad() {
     this.zone.run(()=>{
+      this.groups$=this.playerProv.getGroups(this.groupUnsubscribe)
       this.players$ = this.playerProv.getPlayers(this.unsubscribe); 
       this.playersPlaying$=this.filterPlayers(true)
       this.playersNotPlaying$=this.filterPlayers(false)
-      //this.playersNotPlaying$ = this.playerProv.getPlayers(this.unsubscribe)
-      console.log('ionViewDidLoad SelectPlayerPage');
-      //console.log(this.players$);
-      //this.filteredList$=this.filterPlayers(true);
-      console.log(this.filteredList$)
-      this.groups=this.playerProv.getGroups()
-      console.log(this.groups)
       
       
-    
+      this.groups$.forEach(val=>{
+        if(val){
+          this.groupsExist=true
+        }else{
+          this.groupsExist=false;
+        }
+      })
     })
   }
 
-  getIndexOfId(player) {
-    let id = -1;
-    for (let i = 0; i < this.playingPlayers.length; i++) {
-      if (player._id == this.playingPlayers[i]._id) {
-        id = i;
-      }
-    }
-    return id;
-  }
 
+  selectPlayers(group){
+    this.playerProv.batchWrite((doc)=>{
+      if(doc.data().groups.some(val=>{
+        return val==group
+      })){
+        this.playerProv.updatePlayer(doc.id,{isPlaying: true})
+      }
+      else if(doc.data().isPlaying==true){
+        this.playerProv.updatePlayer(doc.id,{isPlaying: false})
+      }
+    })
+  }
   
 
   addPlayer(player) {
@@ -109,21 +124,6 @@ export class SelectPlayerPage {
     }else{
       this.playerProv.updatePlayer(player.$id,{isPlaying:true})
     }
-
-    
-
-    /*
-    player.isPlaying = true;
-    let id=this.getIndexOfId(player)
-    if(id==-1){
-      this.playingPlayers.push(player);
-    }
-    else{
-      this.playingPlayers.splice(id);
-    }
-    console.log("Playing Players array")
-    console.log(this.playingPlayers)
-    */
     
   }
 
@@ -136,7 +136,7 @@ export class SelectPlayerPage {
       playingPlayers: this.playingPlayers,
       gameType: this.gameType
     }
-    let modal = this.modalCtrl.create(LeaguePlayPage, passParams);
+    let modal = this.modalCtrl.create("LeaguePlayPage", passParams);
     modal.onDidDismiss(()=>{
       this.navCtrl.popAll().catch((e)=>{
         console.error(e)

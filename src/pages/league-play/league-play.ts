@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import {MatchesProvider} from '../../providers/matches/matches';
-import { Platform, ViewController, AlertController, NavController, NavParams, ModalController } from 'ionic-angular';
+import { Platform, ViewController, AlertController, NavController, NavParams, ModalController, IonicPage } from 'ionic-angular';
 
 
-
+@IonicPage()
 @Component({
   selector: 'page-league-play',
   templateUrl: 'league-play.html',
@@ -433,7 +433,7 @@ export class LeaguePlayPage {
         {
           text: 'Yes',
           handler: () => {
-            let data: number;
+            
             this.viewCtrl.dismiss()
           }
         }

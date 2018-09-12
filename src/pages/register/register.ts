@@ -10,7 +10,7 @@ import {PlayersProvider} from '../../providers/players/players';
  * Ionic pages and navigation.
  */
 
-
+@IonicPage()
 @Component({
   selector: 'page-register',
   templateUrl: 'register.html',

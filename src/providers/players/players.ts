@@ -32,24 +32,24 @@ export class PlayersProvider {
   user;
   playerCollection: AngularFirestoreCollection<Players>;
   players: Observable<Players[]>;
-  groups
+  groups:Observable<string[]>
   constructor( public storage: Storage, private afs: AngularFirestore,public auth:AuthorizorProvider) {
     this.user=auth.getCurrentUser();
       
   }
 
-  playersFirstLoad(){
-    this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players'); 
-      this.players=this.playerCollection.snapshotChanges().map(actions=>{
-        return actions.map(a=>{
-          let data = a.payload.doc.data() as Players;
-          data.$id = a.payload.doc.id;
-          return  {...data};
-        })
+  playersFirstLoad() {
+    this.playerCollection = this.afs.doc(`users/user${this.user.uid}`).collection('players');
+    this.players = this.playerCollection.snapshotChanges().map(actions => {
+      return actions.map(a => {
+        let data = a.payload.doc.data() as Players;
+        data.$id = a.payload.doc.id;
+        return { ...data };
       })
-      this.groups = this.afs.doc(`users/user${this.user.uid}`).snapshotChanges().map(data=>{
-        return data.payload.data().groups
-      })
+    })
+    this.groups = this.afs.doc(`users/user${this.user.uid}`).snapshotChanges().map(data => {
+      return data.payload.data().groups
+    })
   }
 
   checkExistingNames(name: String, id) {
@@ -102,22 +102,25 @@ export class PlayersProvider {
       let tempGroups = data.data().groups
       tempGroups.push(name)
       console.log(tempGroups)
-      userRef.update({groups:tempGroups})
+      userRef.update({groups:tempGroups}).catch(e=>{
+        console.error(e)
+      })
     }).catch(e=>{
       console.error(e)
     })
     
   }
 
-  getGroups(){
-    return this.groups
+  getGroups(event){
+    return this.groups.takeUntil(event)
   }
   
   createUser(){
     this.user=this.auth.getCurrentUser()
     this.afs.collection('users').doc(`user${this.user.uid}`).set({
       name:this.user.email,
-      groups:[]
+      groups:[],
+      userId:this.user.uid
     }).then(()=>{
     }).catch((e)=>{
       console.error(e);
@@ -128,21 +131,6 @@ export class PlayersProvider {
     return this.players.takeUntil(event)
     
   }
-
-  /*
-  updateAll(updateProperty,property?,valueOnly?){
-    this.getPlayers().forEach((players)=>{
-      players.forEach((player)=>{
-        if(player[property]==valueOnly){
-          this.updatePlayer(player.$id,updateProperty);
-        }else{
-          this.updatePlayer(player.$id,updateProperty);
-        }
-        
-      })
-    })
-  }
-  */
 
 
 

@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage,Platform, ViewController, AlertController, NavController, NavParams, ModalController } from 'ionic-angular';
 
-import { RemovePlayerPage } from '../remove-player/remove-player';
-import { ResultsPage } from '../results/results';
+
 import {DoublesMatchesProvider} from '../../providers/doubles-matches/doubles-matches';
 
 
@@ -768,7 +767,7 @@ export class RoundsPage {
           greatest_id = player._id;
         }
       }
-      let remove = this.modalCtrl.create(RemovePlayerPage, { totalPlayerNums: greatest_id });
+      let remove = this.modalCtrl.create("RemovePlayerPage", { totalPlayerNums: greatest_id });
       remove.onDidDismiss(data => {
         var checkNums = data;
         if (checkNums !== undefined) {
@@ -861,7 +860,7 @@ export class RoundsPage {
           }
         })
       };
-      this.navCtrl.push(ResultsPage, players);
+      this.navCtrl.push("ResultsPage", players);
     }
 
   }

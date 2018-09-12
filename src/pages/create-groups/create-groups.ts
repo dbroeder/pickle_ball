@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { NavController, NavParams,ViewController } from 'ionic-angular';
+import { NavController, NavParams,ViewController, IonicPage } from 'ionic-angular';
 import{PlayersProvider} from "../../providers/players/players";
 import { Observable } from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -22,6 +22,7 @@ interface Players {
   
 }
 
+@IonicPage()
 @Component({
   selector: 'page-create-groups',
   templateUrl: 'create-groups.html',
@@ -94,6 +95,11 @@ export class CreateGroupsPage {
   }
 
   goBack(){
+    this.playerProv.batchWrite((doc)=>{
+      if(doc.data().isPlaying==true){
+        this.playerProv.updatePlayer(doc.id,{isPlaying:false})
+      }
+    })
     this.viewCtrl.dismiss();
   }
 
@@ -106,7 +112,9 @@ export class CreateGroupsPage {
         console.log("adding "+doc.data().name)
         let tempGroups = doc.data().groups
         tempGroups.push(this.groupName)
-        this.playerProv.updatePlayer(doc.id,{groups:tempGroups})
+        this.playerProv.updatePlayer(doc.id,{groups:tempGroups,isPlaying:false})
+      }else if(doc.data().isPlaying==true){
+        this.playerProv.updatePlayer(doc.id,{isPlaying:false})
       }
     })
     this.playerProv.createGroup(this.groupName)

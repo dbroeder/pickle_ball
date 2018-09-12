@@ -6,17 +6,12 @@ import { MyApp } from './app.component';
 import { AboutPage } from '../pages/about/about';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
-import { RemovePlayerPage} from '../pages/remove-player/remove-player'
 
-import {ResultsPage } from '../pages/results/results';
-import {CreatePlayerPage} from '../pages/create-player/create-player';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { IonicStorageModule } from '@ionic/storage';
 import { PlayersProvider } from '../providers/players/players';
-import {SelectPlayerPage} from '../pages/select-player/select-player';
-import {LeaguePlayPage} from '../pages/league-play/league-play';
-import {CreateGroupsPage} from '../pages/create-groups/create-groups';
+import {LoginPage} from '../pages/login/login'
 import {LongPressModule} from 'ionic-long-press';
 import { DoublesMatchesProvider } from '../providers/doubles-matches/doubles-matches';
 import { MatchesProvider } from '../providers/matches/matches';
@@ -26,8 +21,6 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule, AngularFirestore } from 'angularfire2/firestore';
 import {AngularFireAuthModule} from 'angularfire2/auth';
 import { AuthorizorProvider } from '../providers/authorizor/authorizor';
-import {LoginPage} from '../pages/login/login';
-import {RegisterPage} from '../pages/register/register';
 import {LogoutPage} from '../pages/logout/logout'
 
 export const firebaseConfig = {
@@ -45,15 +38,7 @@ export const firebaseConfig = {
     AboutPage,
     HomePage,
     TabsPage,
-    RemovePlayerPage,
-    
-    ResultsPage,
-    CreatePlayerPage,
-    SelectPlayerPage,
-    LeaguePlayPage,
-    CreateGroupsPage,
     LoginPage,
-    RegisterPage,
     LogoutPage
   ],
   imports: [
@@ -71,15 +56,7 @@ export const firebaseConfig = {
     AboutPage,
     HomePage,
     TabsPage,
-    RemovePlayerPage,
-   
-    ResultsPage,
-    CreatePlayerPage,
-    SelectPlayerPage,
-    LeaguePlayPage,
-    CreateGroupsPage,
     LoginPage,
-    RegisterPage,
     LogoutPage
   ],
   providers: [ 

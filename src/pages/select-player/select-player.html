@@ -23,35 +23,33 @@
     <ion-card-content>
       <ion-item *ngIf="!groupsExist">
         <h6>No Groups Exist</h6>
-        <ion-list *ngFor="let group$ of groups | async">
-          <li>{{group$}}</li>
-        </ion-list>
+
       </ion-item>
       <div *ngIf="groupsExist">
         <ion-row>
           <ion-col>
             <h4>Group Name</h4>
           </ion-col>
-          <ion-col>
-            <h4>Number of Players</h4>
-          </ion-col>
+
         </ion-row>
-        <ion-list *ngFor="let group$ of groups | async">
-    
-          <ion-row>
-            <ion-col align-self: stretch>
-              <ion-item>
-                <ion-label>{{group$.name}}</ion-label>
-                <ion-checkbox (ionChange)="addPlayer(player)" checked="player.isPlaying"></ion-checkbox>
-              </ion-item>
-            </ion-col>
-            <ion-col>
-              <ion-label>{{group.players.length}}</ion-label>
-            </ion-col>
-          </ion-row>
+        <ion-list radio-group>
+            <ion-list *ngFor="let group of groups$ | async">
+          
+                <ion-row>
+                  <ion-col>
+                    <ion-item>
+                      <ion-label>{{group}}</ion-label>
+                      <ion-radio (ionSelect)="selectPlayers(group)"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+      
+                </ion-row>
+              </ion-list>
         </ion-list>
+        
       </div>
       <button ion-button (click)="createGroup()">Create Group</button>
+      <button ion-button (click)="deleteGroup()">Delete Group</button>
     </ion-card-content>
   </ion-card>
 
@@ -62,15 +60,15 @@
       </h2>
     </ion-card-header>
     <ion-card-content>
-      
-  <ion-row>
-      <ion-col>
-        <h3>Player Name</h3>
-      </ion-col>
-      <ion-col>
-        <h3>Display Name</h3>
-      </ion-col>
-    </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <h3>Player Name</h3>
+        </ion-col>
+        <ion-col>
+          <h3>Display Name</h3>
+        </ion-col>
+      </ion-row>
       <ion-list *ngFor="let player of playersPlaying$ | async  ">
 
 
@@ -85,7 +83,7 @@
             <ion-label>{{player.displayName}}</ion-label>
           </ion-col>
         </ion-row>
-    
+
       </ion-list>
 
     </ion-card-content>
@@ -98,15 +96,15 @@
       </h2>
     </ion-card-header>
     <ion-card-content>
-      
-  <ion-row>
-      <ion-col>
-        <h3>Player Name</h3>
-      </ion-col>
-      <ion-col>
-        <h3>Display Name</h3>
-      </ion-col>
-    </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <h3>Player Name</h3>
+        </ion-col>
+        <ion-col>
+          <h3>Display Name</h3>
+        </ion-col>
+      </ion-row>
       <ion-list *ngFor="let player of playersNotPlaying$ | async  ">
 
 
@@ -121,9 +119,9 @@
             <ion-label>{{player.displayName}}</ion-label>
           </ion-col>
         </ion-row>
-    
+
       </ion-list>
-      
+
     </ion-card-content>
   </ion-card>
 
@@ -136,16 +134,5 @@
   </ion-item>
 
   <button ion-button (click)="startRounds()">Start Matches</button>
-
-
-
-
-  
-
-
-  
-
- 
-
 
 </ion-content>

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController, ViewController, Platform } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ViewController, Platform, IonicPage } from 'ionic-angular';
 import { PlayersProvider } from '../../providers/players/players';
 import {PlayaProvider} from '../../providers/playa/playa';
 
-
+@IonicPage()
 @Component({
   selector: 'page-create-player',
   templateUrl: 'create-player.html',

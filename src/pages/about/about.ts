@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController,Platform} from 'ionic-angular';
-import {CreatePlayerPage} from '../create-player/create-player';
+
 import {PlayersProvider} from '../../providers/players/players';
-import {SelectPlayerPage} from '../select-player/select-player';
+
 import { Observable } from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject'
 
@@ -52,11 +52,12 @@ export class AboutPage {
 
   selectPlayers(){
     this.playerProv.batchWrite((doc)=>{
+      if(doc.data().isPlaying==true)
       this.playerProv.updatePlayer(doc.id,{isPlaying:false})
     });
     this.unsubscribe.next()
     this.unsubscribe.complete()
-    let modal = this.modalCtrl.create(SelectPlayerPage);
+    let modal = this.modalCtrl.create("SelectPlayerPage");
     modal.onDidDismiss(()=>{
       this.unsubscribe=new Subject<void>()
       this.players=this.playerProv.getPlayers(this.unsubscribe)
@@ -72,7 +73,7 @@ export class AboutPage {
     let passParams={
       player: player
     };
-    let modal = this.modalCtrl.create(CreatePlayerPage,passParams);
+    let modal = this.modalCtrl.create("CreatePlayerPage",passParams);
     modal.present();
   }
 
@@ -80,7 +81,7 @@ export class AboutPage {
     let id={
       player:-1
     };
-    let modal = this.modalCtrl.create(CreatePlayerPage,id);
+    let modal = this.modalCtrl.create("CreatePlayerPage",id);
     modal.present();
   }
 

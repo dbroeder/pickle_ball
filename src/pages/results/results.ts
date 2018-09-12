@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import {Platform, NavController, NavParams } from 'ionic-angular';
+import {Platform, NavController, NavParams, IonicPage } from 'ionic-angular';
 
 
 
-
+@IonicPage()
 @Component({
   selector: 'page-results',
   templateUrl: 'results.html',
