@@ -35,7 +35,7 @@ export class LeaguePlayPage {
   }
  
   ionViewDidLoad() {
-    this.playingPlayers=this.navParams.get("playingPlayers");
+    this.playingPlayers=this.navParams.get("playingPlayers"); 
     console.log("League Play Players")
     console.log(this.playingPlayers);
     this.gameType = this.navParams.get("gameType");

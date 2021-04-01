@@ -19,8 +19,8 @@ export class DoublesMatchesProvider {
       buttonColor2: 'primary',
       court: courtNum,
       players: [player1,player2,player3,player4],
-      reshuffle:true,
-      sub_round:1
+      sub_round:1,
+      waiting:false
 
     }
   }

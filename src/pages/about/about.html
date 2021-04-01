@@ -20,7 +20,7 @@
         </ion-col>
     </ion-row>
     <h6 *ngIf='playersDontExist'>No players exist at this time.</h6>
-    <button ion-item *ngFor='let player of players | async' (click)='openPlayer(player)'>
+    <button ion-item *ngFor='let player of playerProv.players | async' (click)='openPlayer(player)'>
       <ion-row >
         <ion-col>{{player.name}}</ion-col>
         <ion-col>{{player.rating}}</ion-col>

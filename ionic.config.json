@@ -1,8 +1,8 @@
 {
   "name": "Pickleball Pal",
-  "app_id": "fe975023",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "ionic-angular",
+  "id": "fe975023"
 }

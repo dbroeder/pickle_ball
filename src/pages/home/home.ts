@@ -13,6 +13,7 @@ export class HomePage{
   playerNumber:number;
   error=false;
   gameType="doubles";
+  courtNumber:number;
 
  
 
@@ -38,7 +39,8 @@ export class HomePage{
       this.error=false;
       let num={
         number: this.playerNumber,
-        gameType: this.gameType
+        gameType: this.gameType,
+        courtNumber:this.courtNumber
       }
       let pate = this.modalCtrl.create("RoundsPage",num);
       pate.present();

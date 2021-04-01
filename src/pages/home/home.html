@@ -19,19 +19,28 @@
   <p *ngIf='error'>
     Enter a value greater than or equal to 4.
   </p>
+
+  <ion-item>
+    <ion-label fixed color="dark"># of Courts:</ion-label>
+    <ion-input type="number" placeholder="1+" 
+    [(ngModel)]="courtNumber" (keyup.enter)="play()"></ion-input>
+
+  </ion-item>
   
     <ion-item> 
       <ion-label fixed color="dark">Game Type:</ion-label>
       <ion-select interface='popover' [(ngModel)]="gameType" >
-        <ion-option value="singles">Singles</ion-option>
+        <ion-option value="singles">Team/Singles</ion-option>
         <ion-option value="doubles" selected="true">Doubles</ion-option>
       </ion-select>
     </ion-item>
 
+    
+
   
   <button ion-button color="secondary" (click)="play()" block>Play</button>
   <p class="directions">
-    Assign each player a number and select either doubles matches or singles matches. The next page will randomly assign players
+    Assign each player or team a number and select either doubles matches or singles/team matches. The next page will randomly assign players
      a partner (if doubles is selected) and a court. After each match, select the button that contains the winning player/team 
     to keep track of who has the best winning percentage. Each round is randomized so you won't play agianst/with the same people each round.
   </p>

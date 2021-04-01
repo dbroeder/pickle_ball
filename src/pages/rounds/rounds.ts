@@ -32,8 +32,12 @@ export class RoundsPage {
   singlesMatches = [];
   doublesFormat = false;
   singlesFormat = false;
-  competitiveText = "Set a Competitive Round";
+  competitiveText = "Matchup by winning %";
   alertPresented;
+  courtNumber:number;
+  waitingPeeps=[];
+  finishedPeeps=[];
+  extraByes='';
 
   constructor(public doubleProv:DoublesMatchesProvider, public platform: Platform, public viewCtrl: ViewController, public alertCtrl: AlertController, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
     this.alertPresented=false;
@@ -76,6 +80,10 @@ export class RoundsPage {
     this.rounds = 1;
     this.playerNumber = this.navParams.get('number');
     this.gameType = this.navParams.get('gameType');
+    this.courtNumber=this.navParams.get('courtNumber');
+    if(this.courtNumber==null){
+      this.courtNumber=this.playerNumber
+    }
     console.log(this.gameType);
     if (this.gameType == "singles") {
       this.singlesFormat = true;
@@ -125,16 +133,27 @@ export class RoundsPage {
 
     this.singlesMatches = [];
     this.selectedButtons = [];
+    this.waitingPeeps=[];
+    
     //if even number then set up matches
     if (this.playerNumber % 2 == 0) {
+      let game;
       for (var index = 0; index < this.picklePlayers.length; index += 2) {
         this.selectedButtons.push(false);
-        this.singlesMatches.push(new SingleGame(this.picklePlayers[index], this.picklePlayers[index + 1], index / 2 + 1))
+        game = new SingleGame(this.picklePlayers[index], this.picklePlayers[index + 1], index / 2 + 1)
+        if(game.court > this.courtNumber){
+          game.waiting=true;
+          this.waitingPeeps.push(game)
+        }else{
+          this.singlesMatches.push(new SingleGame(this.picklePlayers[index], this.picklePlayers[index + 1], index / 2 + 1))
+        }
+        
       }
 
     }
     //if odd number assisgns players a bye round
     else {
+      let game;
       this.allHaveHadByes();
       this.byeRound = true;
       while (this.picklePlayers[this.picklePlayers.length - 1].playedBye) {
@@ -142,7 +161,13 @@ export class RoundsPage {
       }
       for (let index = 0; index < this.picklePlayers.length - 1; index += 2) {
         this.selectedButtons.push(false);
-        this.singlesMatches.push(new SingleGame(this.picklePlayers[index], this.picklePlayers[index + 1], index / 2 + 1))
+        game=new SingleGame(this.picklePlayers[index], this.picklePlayers[index + 1], index / 2 + 1)
+        if(game.court>this.courtNumber){
+          this.waitingPeeps.push(game);
+        }else{
+          this.singlesMatches.push(game)
+        }
+        
       }
       this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
     }
@@ -157,25 +182,39 @@ export class RoundsPage {
     } else {
       this.doublesMatches = [];
       this.selectedButtons = [];
+      this.waitingPeeps=[];
       this.singlesButton = false;
       this.singleGame=undefined;
       if (this.picklePlayers.length % 4 === 0) {
         this.byeRound = false;
         this.singlesRound = false;
+        let game;
         for (var index = 0; index < this.picklePlayers.length; index += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index], this.picklePlayers[index + 1], this.picklePlayers[index + 2], this.picklePlayers[index + 3], index / 4 + 1))
+          game=this.doubleProv.createDoublesGame(this.picklePlayers[index], this.picklePlayers[index + 1], this.picklePlayers[index + 2], this.picklePlayers[index + 3], index / 4 + 1)
+          if(game.court>this.courtNumber){
+            this.waitingPeeps.push(game);
+          }else{
+            this.doublesMatches.push(game)
+          }
+          
         }
       } else if (this.picklePlayers.length % 4 === 1) {
         this.byeRound = true;
         this.singlesRound = false;
+        let game;
         this.allHaveHadByes();
         while (this.picklePlayers[this.picklePlayers.length - 1].playedBye) {
           this.randomList(this.picklePlayers.length);
         }
         for (var dex = 0; dex < this.picklePlayers.length - 1; dex += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[dex], this.picklePlayers[dex + 1], this.picklePlayers[dex + 2], this.picklePlayers[dex + 3], dex / 4 + 1))
+          game=this.doubleProv.createDoublesGame(this.picklePlayers[dex], this.picklePlayers[dex + 1], this.picklePlayers[dex + 2], this.picklePlayers[dex + 3], dex / 4 + 1)
+          if(game.court>this.courtNumber){
+            this.waitingPeeps.push(game);
+          }else{
+            this.doublesMatches.push(game)
+          }
         }
         this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
       }
@@ -184,6 +223,7 @@ export class RoundsPage {
         while (this.picklePlayers[this.picklePlayers.length - 1].playedBye) {
           this.randomList(this.picklePlayers.length);
         }
+        let game;
         this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
         this.allHavePlayedSingles();
         while (this.picklePlayers[this.picklePlayers.length - 2].playedSingles) {
@@ -195,20 +235,36 @@ export class RoundsPage {
         }
         var player2 = this.picklePlayers[this.picklePlayers.length - 3];
         var court = Math.floor(this.picklePlayers.length / 4) + 1;
-        this.singleGame = new SingleGame(player1, player2, court);
+        this.singleGame = new SingleGame(player1, player2, court)
+        if(this.courtNumber<court){
+          this.singlesRound = false;
+          this.extraByes = `, ${player1._id}, ${player2._id}`
+        }else{
+          this.singlesRound = true;
+        }
+        
+        
         this.sbuttonColor1 = 'primary';
         this.sbuttonColor2 = 'primary';
 
         this.byeRound = true;
-        this.singlesRound = true;
+        
         for (var index1 = 0; index1 < this.picklePlayers.length - 3; index1 += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index1], this.picklePlayers[index1 + 1], this.picklePlayers[index1 + 2], this.picklePlayers[index1 + 3], index1 / 4 + 1))
+          game=this.doubleProv.createDoublesGame(this.picklePlayers[index1], this.picklePlayers[index1 + 1], this.picklePlayers[index1 + 2], this.picklePlayers[index1 + 3], index1 / 4 + 1)
+          if(game.court>this.courtNumber){
+            this.waitingPeeps.push(game);
+          }else{
+            this.doublesMatches.push(game)
+          }
         }
+        
+        
       }
       else {
         this.byeRound = false;
         this.singlesRound = true;
+        let game;
         this.allHavePlayedSingles();
         while (this.picklePlayers[this.picklePlayers.length - 1].playedSingles) {
           this.randomList(this.picklePlayers.length);
@@ -222,17 +278,30 @@ export class RoundsPage {
         var player22 = this.picklePlayers[this.picklePlayers.length - 2];
 
         var court1 = Math.floor(this.picklePlayers.length / 4) + 1;
-        this.singleGame = new SingleGame(player11, player22, court1);
+        if(this.courtNumber<court1){
+          this.singlesRound=false;
+          this.byeRound=true;
+          this.byePlayer = player11;
+          this.extraByes=`, ${player22._id}`
+        }else{
+          this.singleGame = new SingleGame(player11, player22, court1);
+        }
+        
         for (var index2 = 0; index2 < this.picklePlayers.length - 2; index2 += 4) {
           this.selectedButtons.push(false);
-          this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index2], this.picklePlayers[index2 + 1], this.picklePlayers[index2 + 2], this.picklePlayers[index2 + 3], index2 / 4 + 1))
+          game = this.doubleProv.createDoublesGame(this.picklePlayers[index2], this.picklePlayers[index2 + 1], this.picklePlayers[index2 + 2], this.picklePlayers[index2 + 3], index2 / 4 + 1)
+          if(game.court>this.courtNumber){
+            this.waitingPeeps.push(game);
+          }else{
+            this.doublesMatches.push(game)
+          }
         }
       }
     }
 
   }
 
-  winnerWinnerDoubles(cnum, bnum, plyr1, plyr2, plyr3, plyr4) {
+  winnerWinnerDoubles(cnum, bnum, plyr1, plyr2, plyr3, plyr4,match) {
     //handles when the button is pushed in doubles format
     if (this.doublesMatches[cnum - 1].buttonColor1 === 'primary' && this.doublesMatches[cnum - 1].buttonColor2 === 'primary') {
       if (bnum === 1) {
@@ -291,7 +360,30 @@ export class RoundsPage {
       
 
     }
+    if(this.waitingPeeps.length){
+      this.finishedPeeps.push(match)
+      this.waitingPeeps[0].court = match.court;
+      if(this.waitingPeeps[0].type){
+        this.singlesRound=true;
+      }else{
+        this.doublesMatches.splice(this.getIndexOfGame(match,this.doublesMatches),1,this.waitingPeeps[0])
+      }
+      
+      this.waitingPeeps.splice(0,1);
+      
 
+    }
+
+  }
+
+  getIndexOfGame(game,list){
+    let index = -1;
+    for(let i = 0;i<list.length;i++){
+      if(game.court === list[i].court){
+        index=i;
+      }
+    }
+    return index;
   }
 
   removePlayerFromList(player){
@@ -494,10 +586,18 @@ export class RoundsPage {
       else if (this.picklePlayers.length % 4 === 3) {
 
         this.byePlayer = this.picklePlayers[this.picklePlayers.length - 1];
-
         var player1 = this.picklePlayers[this.picklePlayers.length - 2];
 
         var player2 = this.picklePlayers[this.picklePlayers.length - 3];
+        if(this.courtNumber<Math.floor(this.picklePlayers.length / 4) + 1){
+          this.extraByes = `, ${player1._id}, ${player2._id}` 
+          this.singlesRound=false;
+        }
+        else{
+          this.singlesRound=true;
+        }
+
+        
 
         var court = Math.floor(this.picklePlayers.length / 4) + 1;
         this.singleGame = new SingleGame(player1, player2, court);
@@ -505,22 +605,31 @@ export class RoundsPage {
         this.sbuttonColor2 = 'primary';
 
         this.byeRound = true;
-        this.singlesRound = true;
         for (var index1 = 0; index1 < this.picklePlayers.length - 3; index1 += 4) {
           this.selectedButtons.push(false);
           this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index1], this.picklePlayers[index1 + 3], this.picklePlayers[index1 + 2], this.picklePlayers[index1 + 1], index1 / 4 + 1))
         }
       }
       else {
-        this.byeRound = false;
-        this.singlesRound = true;
+        
         this.sbuttonColor1 = 'primary';
         this.sbuttonColor2 = 'primary';
         var player11 = this.picklePlayers[this.picklePlayers.length - 1];
         var player22 = this.picklePlayers[this.picklePlayers.length - 2];
-
-        var court1 = Math.floor(this.picklePlayers.length / 4) + 1;
-        this.singleGame = new SingleGame(player11, player22, court1);
+        if((this.courtNumber<Math.floor(this.picklePlayers.length / 4) + 1)){
+          this.byeRound = true;
+          this.singlesRound = false;
+          this.byePlayer= player11;
+          this.extraByes=`, ${player22._id}`
+        }else{
+          this.byeRound = false;
+          this.singlesRound= true;
+          var court1 = Math.floor(this.picklePlayers.length / 4) + 1;
+          this.singleGame = new SingleGame(player11, player22, court1);
+        }
+                
+        
+        
         for (var index2 = 0; index2 < this.picklePlayers.length - 2; index2 += 4) {
           this.selectedButtons.push(false);
           this.doublesMatches.push(this.doubleProv.createDoublesGame(this.picklePlayers[index2], this.picklePlayers[index2 + 3], this.picklePlayers[index2 + 2], this.picklePlayers[index2 + 1], index2 / 4 + 1))
@@ -609,6 +718,8 @@ export class RoundsPage {
 
   nextRound() {
     //handles the next button 
+    
+    this.waitingPeeps=[];
     if (this.buttonSelected() === true && this.competetiveRound == false) {
       this.re_align_Players();
       this.rounds++;
@@ -618,6 +729,7 @@ export class RoundsPage {
 
       
       this.winners = [];
+      this.finishedPeeps=[];
       this.singlesWinner = new Playa(0);
     } else if (this.competetiveRound == true) {
       let alert = this.alertCtrl.create({
@@ -663,6 +775,18 @@ export class RoundsPage {
         for (var num = 0; num < this.picklePlayers.length; num++) {
           if (this.picklePlayers[num]._id == this.doublesMatches[idex].players[dd]._id) {
             this.picklePlayers[num] = this.doublesMatches[idex].players[dd];
+          }
+        }
+      }
+
+    }
+    for (var idex = 0; idex < this.finishedPeeps.length; idex++) {
+
+      for (var dd = 0; dd < 4; dd++) {
+        this.finishedPeeps[idex].players[dd].roundsPlayed++;
+        for (var num = 0; num < this.picklePlayers.length; num++) {
+          if (this.picklePlayers[num]._id == this.finishedPeeps[idex].players[dd]._id) {
+            this.picklePlayers[num] = this.finishedPeeps[idex].players[dd];
           }
         }
       }
@@ -865,58 +989,6 @@ export class RoundsPage {
 
   }
 
-  roundRobinMixup(match) {
-    if(this.selectedButtons[this.doublesMatches.findIndex((element)=>{
-      return element == match;
-    })]){
-      if (match.sub_round == 2) {
-        let x = match.players[3];
-        let y = match.players[1];
-        match.players[3] = y;
-        match.players[1] = x;
-        match.sub_round++;
-        match.reshuffle = false;
-        match.buttonColor1 = 'primary';
-        match.buttonColor2='primary';
-        this.doublesMatches.splice(this.doublesMatches.findIndex((element) => {
-          return element == match;
-        }), 1, match);
-      } else {
-        let x = match.players[1];
-        let y = match.players[2];
-        match.players[1] = y;
-        match.players[2] = x;
-        match.sub_round++;
-        match.buttonColor1 = 'primary';
-        match.buttonColor2='primary';
-        this.doublesMatches.splice(this.doublesMatches.findIndex((element) => {
-          return element == match;
-        }), 1, match);
-      }
-
-      this.re_align_Players();
-      this.selectedButtons[this.doublesMatches.findIndex((element)=>{
-        return element == match;
-      })]=false;
-      this.winners.forEach((element)=>{
-        match.players.forEach((val)=>{
-          if(element == val){
-            this.winners.splice(this.winners.findIndex((v)=>{return v==element}))
-          }
-        })
-      })
-      console.log(this.winners);
-      
-    }else{
-      let alert = this.alertCtrl.create({
-        title:"No Winner Selected",
-        subTitle: "Select a winner to proceed",
-        buttons: ['ok']
-      })
-      alert.present();
-    }
-
-  }
 
 }
 
@@ -931,7 +1003,9 @@ class SingleGame {
     this.player1 = player1;
     this.player2 = player2;
     this.court = num;
-  }
+  };
+  waiting= false;
+  type: 'string'
 }
 
 class Playa {

@@ -105,7 +105,7 @@
           <h3>Display Name</h3>
         </ion-col>
       </ion-row>
-      <ion-list *ngFor="let player of playersNotPlaying$ | async  ">
+      <ion-list *ngFor="let player of playerProv.players | async  ">
 
 
         <ion-row>
